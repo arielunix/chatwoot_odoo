@@ -129,12 +129,12 @@ export default function ContactModule({ data, odooCustomer, onCreateCustomer, is
         await Promise.all(
           quotesData.map(async (quote) => {
             const invoiceStatus = await checkInvoiceStatus(quote.id);
-            if (invoiceStatus.hasInvoice && invoiceStatus.invoiceIds && invoiceStatus.invoiceIds.length > 0) {
-              const invoiceId = invoiceStatus.invoiceIds[0];
+            if (invoiceStatus.has_invoice && invoiceStatus.invoice_ids && invoiceStatus.invoice_ids.length > 0) {
+              const invoiceId = invoiceStatus.invoice_ids[0];
               statusMap[quote.id] = {
                 hasInvoice: true,
                 invoiceId: invoiceId,
-                paymentState: invoiceStatus.paymentState || 'not_paid'
+                paymentState: invoiceStatus.payment_state || 'not_paid'
               };
             }
           })
@@ -221,7 +221,7 @@ export default function ContactModule({ data, odooCustomer, onCreateCustomer, is
         setInvoiceStatusMap(prev => ({ 
           ...prev, 
           [quoteId]: { 
-            invoiceId: result.invoiceId, 
+            invoiceId: result.invoice_id, 
             paymentState: 'not_paid' 
           } 
         }));
@@ -1131,9 +1131,18 @@ export default function ContactModule({ data, odooCustomer, onCreateCustomer, is
       {/* MODAL FACTURA */}
       <Dialog open={invoiceDialogOpen} onClose={() => setInvoiceDialogOpen(false)} maxWidth="md" fullWidth PaperProps={{ sx: { background: isDarkMode ? '#2d2d2d' : 'white' } }}>
         <DialogTitle>
-          <Typography variant="h6" sx={{ fontSize: 18, color: isDarkMode ? '#fff' : '#000' }}>Detalle de Factura</Typography>
+          Detalle de Factura
         </DialogTitle>
         <DialogContent>
+          {invoiceMessage && (
+            <Alert 
+              severity={invoiceSeverity} 
+              sx={{ mb: 2, fontSize: 13 }}
+              onClose={() => setInvoiceMessage(null)}
+            >
+              {invoiceMessage}
+            </Alert>
+          )}
           {selectedInvoice && (
             <>
             <Box sx={{ display: "grid", gridTemplateColumns: "repeat(2, 1fr)", gap: 2, mt: 2 }}>

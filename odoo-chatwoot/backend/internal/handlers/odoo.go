@@ -260,7 +260,7 @@ func (h *OdooHandler) GetInvoiceStatus(c *fiber.Ctx) error {
 		return c.Status(400).JSON(fiber.Map{"error": "invalid id"})
 	}
 	
-	hasInvoice, paymentState, err := h.odooService.GetInvoiceStatus(id)
+	hasInvoice, paymentState, invoiceIds, err := h.odooService.GetInvoiceStatus(id)
 	if err != nil {
 		return c.Status(500).JSON(fiber.Map{"error": err.Error()})
 	}
@@ -268,6 +268,7 @@ func (h *OdooHandler) GetInvoiceStatus(c *fiber.Ctx) error {
 	return c.JSON(fiber.Map{
 		"has_invoice":   hasInvoice,
 		"payment_state": paymentState,
+		"invoice_ids":  invoiceIds,
 	})
 }
 

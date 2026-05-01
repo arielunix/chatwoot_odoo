@@ -96,6 +96,28 @@ func extractField(structXML, field string) interface{} {
 		return nil
 	}
 	
+	// For partner_id and similar fields that come as arrays [id, name], extract the ID
+	if field == "partner_id" || field == "partner_shipping_id" || field == "product_id" {
+		pattern := `<name>` + field + `</name>[\s\S]*?<value>([\s\S]*)</value>`
+		re := regexp.MustCompile(pattern)
+		match := re.FindStringSubmatch(structXML)
+		if match != nil {
+			val := match[1]
+			if strings.Contains(val, "<array>") {
+				// Extract the first int from the array
+				intPattern := `<int>(\d+)</int>`
+				intMatch := regexp.MustCompile(intPattern).FindStringSubmatch(val)
+				if intMatch != nil {
+					if id, err := strconv.Atoi(intMatch[1]); err == nil {
+						return id
+					}
+				}
+			}
+			return val
+		}
+		return nil
+	}
+	
 	pattern := `<name>` + field + `</name>[\s\S]*?<value>([\s\S]*?)</value>`
 	re := regexp.MustCompile(pattern)
 	match := re.FindStringSubmatch(structXML)

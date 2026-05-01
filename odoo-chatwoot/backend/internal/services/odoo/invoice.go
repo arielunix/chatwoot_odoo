@@ -6,6 +6,7 @@ import (
 	"odoo-backend/internal/utils"
 	"regexp"
 	"strconv"
+	"strings"
 )
 
 // InvoiceService handles invoice creation from quotes
@@ -368,4 +369,272 @@ func (s *InvoiceService) CreateInvoiceFromQuote(quoteID int, uid int) (int, erro
 	fmt.Println("Invoice validated successfully")
 	
 	return invoiceID, nil
+}
+
+// GetInvoiceDetail retrieves invoice detail
+func (s *InvoiceService) GetInvoiceDetail(invoiceID int, uid int) (*utils.InvoiceDetail, error) {
+	xml := fmt.Sprintf(`<?xml version="1.0"?>
+<methodCall>
+  <methodName>execute_kw</methodName>
+  <params>
+    <param><value><string>%s</string></value></param>
+    <param><value><int>%d</int></value></param>
+    <param><value><string>%s</string></value></param>
+    <param><value><string>account.move</string></value></param>
+    <param><value><string>read</string></value></param>
+    <param>
+      <value>
+        <array>
+          <data>
+            <value><array><data><value><int>%d</int></value></data></array></value>
+            <value><array>
+              <data>
+                <value><string>id</string></value>
+                <value><string>name</string></value>
+                <value><string>state</string></value>
+                <value><string>move_type</string></value>
+                <value><string>partner_id</string></value>
+                <value><string>invoice_date</string></value>
+                <value><string>amount_total</string></value>
+                <value><string>amount_untaxed</string></value>
+                <value><string>amount_tax</string></value>
+                <value><string>invoice_origin</string></value>
+                <value><string>invoice_line_ids</string></value>
+                <value><string>payment_state</string></value>
+                <value><string>amount_residual</string></value>
+              </data>
+            </array></value>
+          </data>
+        </array>
+      </value>
+    </param>
+  </params>
+</methodCall>`, s.config.OdooDB, uid, s.config.OdooPass, invoiceID)
+	
+	text, err := utils.XMLRPCCall(s.config.OdooURL, "/xmlrpc/2/object", xml)
+	if err != nil {
+		return nil, err
+	}
+	
+	return utils.ParseInvoiceDetail(text), nil
+}
+
+// PayInvoice pays an invoice using the account.payment.register wizard
+func (s *InvoiceService) PayInvoice(invoiceID, journalID, paymentMethodID int, amount float64, uid int) error {
+	fmt.Printf("Paying invoice ID: %d, Amount: %.2f, Journal: %d\n", invoiceID, amount, journalID)
+	
+	// 1. Get invoice details to obtain partner_id and amount_residual
+	invoiceXML := fmt.Sprintf(`<?xml version="1.0"?>
+<methodCall>
+  <methodName>execute_kw</methodName>
+  <params>
+    <param><value><string>%s</string></value></param>
+    <param><value><int>%d</int></value></param>
+    <param><value><string>%s</string></value></param>
+    <param><value><string>account.move</string></value></param>
+    <param><value><string>read</string></value></param>
+    <param>
+      <value>
+        <array>
+          <data>
+            <value><array><data><value><int>%d</int></value></data></array></value>
+            <value><array><data><value><string>partner_id</string></value><value><string>amount_residual</string></value></data></array></value>
+          </data>
+        </array>
+      </value>
+    </param>
+  </params>
+</methodCall>`, s.config.OdooDB, uid, s.config.OdooPass, invoiceID)
+	
+	invoiceText, err := utils.XMLRPCCall(s.config.OdooURL, "/xmlrpc/2/object", invoiceXML)
+	if err != nil {
+		return fmt.Errorf("error getting invoice: %v", err)
+	}
+	
+	detail := utils.ParseInvoiceDetail(invoiceText)
+	if detail == nil {
+		return fmt.Errorf("invoice not found")
+	}
+	
+	partnerID := detail.PartnerID
+	amountResidual := detail.AmountResidual
+	fmt.Printf("Partner ID: %d, Amount Residual: %.2f\n", partnerID, amountResidual)
+	
+	// Use amount_residual for payment instead of user-provided amount
+	paymentAmount := amountResidual
+	
+	// 2. Get invoice lines for the wizard
+	linesXML := fmt.Sprintf(`<?xml version="1.0"?>
+<methodCall>
+  <methodName>execute_kw</methodName>
+  <params>
+    <param><value><string>%s</string></value></param>
+    <param><value><int>%d</int></value></param>
+    <param><value><string>%s</string></value></param>
+    <param><value><string>account.move.line</string></value></param>
+    <param><value><string>search</string></value></param>
+    <param>
+      <value>
+        <array>
+          <data>
+            <value><array>
+              <data>
+                <value><array>
+                  <data>
+                    <value><string>move_id</string></value>
+                    <value><string>=</string></value>
+                    <value><int>%d</int></value>
+                  </data>
+                </array></value>
+              </data>
+            </array></value>
+          </data>
+        </array>
+      </value>
+    </param>
+  </params>
+</methodCall>`, s.config.OdooDB, uid, s.config.OdooPass, invoiceID)
+	
+	linesText, err := utils.XMLRPCCall(s.config.OdooURL, "/xmlrpc/2/object", linesXML)
+	if err != nil {
+		return fmt.Errorf("error getting invoice lines: %v", err)
+	}
+	
+	lineMatches := regexp.MustCompile(`<int>(\d+)<\/int>`).FindAllStringSubmatch(linesText, -1)
+	var lineIDs []int
+	for _, match := range lineMatches {
+		if len(match) > 1 {
+			if id, err := strconv.Atoi(match[1]); err == nil {
+				lineIDs = append(lineIDs, id)
+			}
+		}
+	}
+	
+	if len(lineIDs) == 0 {
+		return fmt.Errorf("no invoice lines found")
+	}
+	
+	fmt.Printf("Invoice line IDs: %v\n", lineIDs)
+	
+	// 3. Create wizard account.payment.register
+	lineIDsXML := ""
+	for _, lineID := range lineIDs {
+		lineIDsXML += fmt.Sprintf(`<value><int>%d</int></value>`, lineID)
+	}
+	
+	wizardXML := fmt.Sprintf(`<?xml version="1.0"?>
+<methodCall>
+  <methodName>execute_kw</methodName>
+  <params>
+    <param><value><string>%s</string></value></param>
+    <param><value><int>%d</int></value></param>
+    <param><value><string>%s</string></value></param>
+    <param><value><string>account.payment.register</string></value></param>
+    <param><value><string>create</string></value></param>
+    <param>
+      <value>
+        <array>
+          <data>
+            <value><array>
+              <data>
+                <value>
+                  <struct>
+                    <member>
+                      <name>amount</name>
+                      <value><double>%.2f</double></value>
+                    </member>
+                    <member>
+                      <name>journal_id</name>
+                      <value><int>%d</int></value>
+                    </member>
+                    <member>
+                      <name>payment_type</name>
+                      <value><string>inbound</string></value>
+                    </member>
+                    <member>
+                      <name>line_ids</name>
+                      <value><array><data>%s</data></array></value>
+                    </member>
+                  </struct>
+                </value>
+              </data>
+            </array></value>
+          </data>
+        </array>
+      </value>
+    </param>
+  </params>
+</methodCall>`, s.config.OdooDB, uid, s.config.OdooPass, paymentAmount, journalID, lineIDsXML)
+	
+	fmt.Println("Creating wizard...")
+	wizardText, err := utils.XMLRPCCall(s.config.OdooURL, "/xmlrpc/2/object", wizardXML)
+	if err != nil {
+		return fmt.Errorf("error creating wizard: %v", err)
+	}
+	
+	fmt.Println("Wizard response:", wizardText)
+	
+	wizardIDMatch := regexp.MustCompile(`<int>(\d+)<\/int>`).FindStringSubmatch(wizardText)
+	wizardID := 0
+	if len(wizardIDMatch) > 1 {
+		wizardID, _ = strconv.Atoi(wizardIDMatch[1])
+	}
+	
+	fmt.Printf("Wizard ID: %d\n", wizardID)
+	
+	if wizardID == 0 {
+		return fmt.Errorf("could not create wizard")
+	}
+	
+	// 4. Call action_create_payments
+	createPaymentsXML := fmt.Sprintf(`<?xml version="1.0"?>
+<methodCall>
+  <methodName>execute_kw</methodName>
+  <params>
+    <param><value><string>%s</string></value></param>
+    <param><value><int>%d</int></value></param>
+    <param><value><string>%s</string></value></param>
+    <param><value><string>account.payment.register</string></value></param>
+    <param><value><string>action_create_payments</string></value></param>
+    <param>
+      <value>
+        <array>
+          <data>
+            <value><array>
+              <data>
+                <value><int>%d</int></value>
+              </data>
+            </array></value>
+          </data>
+        </array>
+      </value>
+    </param>
+  </params>
+</methodCall>`, s.config.OdooDB, uid, s.config.OdooPass, wizardID)
+	
+	fmt.Println("Calling action_create_payments...")
+	paymentResponse, err := utils.XMLRPCCall(s.config.OdooURL, "/xmlrpc/2/object", createPaymentsXML)
+	if err != nil {
+		fmt.Println("XML-RPC Error calling action_create_payments:", err)
+		// Check for specific error about payment method line in the error message
+		if strings.Contains(err.Error(), "línea de método de pago") || strings.Contains(err.Error(), "payment method line") {
+			return fmt.Errorf("El diario seleccionado no tiene configurado un método de pago. Por favor, seleccione un diario válido (Efectivo o Banco).")
+		}
+		return fmt.Errorf("error creating payments: %v", err)
+	}
+	
+	fmt.Println("Payment response:", paymentResponse)
+	
+	// Check for specific Odoo errors in response
+	if strings.Contains(paymentResponse, "fault") {
+		// Check for specific error about payment method line
+		if strings.Contains(paymentResponse, "línea de método de pago") || strings.Contains(paymentResponse, "payment method line") {
+			return fmt.Errorf("El diario seleccionado no tiene configurado un método de pago. Por favor, seleccione un diario válido (Efectivo o Banco).")
+		}
+		return fmt.Errorf("Odoo error: %s", paymentResponse)
+	}
+	
+	fmt.Println("Payment created successfully")
+	
+	return nil
 }

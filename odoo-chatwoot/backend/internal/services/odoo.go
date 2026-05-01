@@ -5,6 +5,8 @@ import (
 	"odoo-backend/internal/config"
 	"odoo-backend/internal/services/odoo"
 	"odoo-backend/internal/utils"
+	"regexp"
+	"strconv"
 	"strings"
 )
 
@@ -596,10 +598,10 @@ func (s *OdooService) CreateInvoiceFromQuote(quoteID int) (int, error) {
 }
 
 // GetInvoiceStatus retrieves invoice status
-func (s *OdooService) GetInvoiceStatus(quoteID int) (bool, string, error) {
+func (s *OdooService) GetInvoiceStatus(quoteID int) (bool, string, []int, error) {
 	uid, err := s.GetUID()
 	if err != nil {
-		return false, "", err
+		return false, "", nil, err
 	}
 	
 	xml := fmt.Sprintf(`<?xml version="1.0"?>
@@ -641,21 +643,50 @@ func (s *OdooService) GetInvoiceStatus(quoteID int) (bool, string, error) {
 	
 	text, err := utils.XMLRPCCall(s.config.OdooURL, "/xmlrpc/2/object", xml)
 	if err != nil {
-		return false, "", err
+		return false, "", nil, err
 	}
 	
 	// Check if invoice exists
 	if !strings.Contains(text, "<struct>") {
-		return false, "", nil
+		return false, "", nil, nil
 	}
 	
-	// Extract payment state
-	structs := utils.ParseInvoiceDetail(text)
-	if structs != nil {
-		return true, structs.PaymentState, nil
+	// Extract invoice IDs and payment state
+	structs := regexp.MustCompile(`<struct>([\s\S]*?)</struct>`).FindAllStringSubmatch(text, -1)
+	if structs == nil {
+		return false, "", nil, nil
 	}
 	
-	return false, "", nil
+	var invoiceIDs []int
+	var paymentState string
+	
+	for _, match := range structs {
+		if len(match) > 1 {
+			structXML := match[1]
+			
+			// Extract ID
+			idMatch := regexp.MustCompile(`<name>id<\/name>[\s\S]*?<value><int>(\d+)<\/int>`).FindStringSubmatch(structXML)
+			if len(idMatch) > 1 {
+				if id, err := strconv.Atoi(idMatch[1]); err == nil {
+					invoiceIDs = append(invoiceIDs, id)
+				}
+			}
+			
+			// Extract payment state
+			if paymentState == "" {
+				stateMatch := regexp.MustCompile(`<name>payment_state<\/name>[\s\S]*?<value><string>(.*?)<\/string>`).FindStringSubmatch(structXML)
+				if len(stateMatch) > 1 {
+					paymentState = stateMatch[1]
+				}
+			}
+		}
+	}
+	
+	if len(invoiceIDs) > 0 {
+		return true, paymentState, invoiceIDs, nil
+	}
+	
+	return false, "", nil, nil
 }
 
 // GetInvoiceDetail retrieves invoice detail
@@ -665,50 +696,7 @@ func (s *OdooService) GetInvoiceDetail(invoiceID int) (*utils.InvoiceDetail, err
 		return nil, err
 	}
 	
-	xml := fmt.Sprintf(`<?xml version="1.0"?>
-<methodCall>
-  <methodName>execute_kw</methodName>
-  <params>
-    <param><value><string>%s</string></value></param>
-    <param><value><int>%d</int></value></param>
-    <param><value><string>%s</string></value></param>
-    <param><value><string>account.move</string></value></param>
-    <param><value><string>read</string></value></param>
-    <param>
-      <value>
-        <array>
-          <data>
-            <value><array><data><value><int>%d</int></value></data></array></value>
-            <value><array>
-              <data>
-                <value><string>id</string></value>
-                <value><string>name</string></value>
-                <value><string>state</string></value>
-                <value><string>move_type</string></value>
-                <value><string>partner_id</string></value>
-                <value><string>invoice_date</string></value>
-                <value><string>amount_total</string></value>
-                <value><string>amount_untaxed</string></value>
-                <value><string>amount_tax</string></value>
-                <value><string>invoice_origin</string></value>
-                <value><string>invoice_line_ids</string></value>
-                <value><string>payment_state</string></value>
-                <value><string>amount_residual</string></value>
-              </data>
-            </array></value>
-          </data>
-        </array>
-      </value>
-    </param>
-  </params>
-</methodCall>`, s.config.OdooDB, uid, s.config.OdooPass, invoiceID)
-	
-	text, err := utils.XMLRPCCall(s.config.OdooURL, "/xmlrpc/2/object", xml)
-	if err != nil {
-		return nil, err
-	}
-	
-	return utils.ParseInvoiceDetail(text), nil
+	return s.InvoiceService.GetInvoiceDetail(invoiceID, uid)
 }
 
 // GetPaymentMethods retrieves payment methods
@@ -824,56 +812,7 @@ func (s *OdooService) PayInvoice(invoiceID, journalID, paymentMethodID int, amou
 		return err
 	}
 	
-	xml := fmt.Sprintf(`<?xml version="1.0"?>
-<methodCall>
-  <methodName>execute_kw</methodName>
-  <params>
-    <param><value><string>%s</string></value></param>
-    <param><value><int>%d</int></value></param>
-    <param><value><string>%s</string></value></param>
-    <param><value><string>account.payment</string></value></param>
-    <param><value><string>create</string></value></param>
-    <param>
-      <value>
-        <array>
-          <data>
-            <value>
-              <struct>
-                <member>
-                  <name>amount</name>
-                  <value><double>%.2f</double></value>
-                </member>
-                <member>
-                  <name>payment_type</name>
-                  <value><string>inbound</string></value>
-                </member>
-                <member>
-                  <name>partner_type</name>
-                  <value><string>customer</string></value>
-                </member>
-                <member>
-                  <name>journal_id</name>
-                  <value><int>%d</int></value>
-                </member>
-                <member>
-                  <name>payment_method_id</name>
-                  <value><int>%d</int></value>
-                </member>
-                <member>
-                  <name>payment_method_line_id</name>
-                  <value><int>%d</int></value>
-                </member>
-              </struct>
-            </value>
-          </data>
-        </array>
-      </value>
-    </param>
-  </params>
-</methodCall>`, s.config.OdooDB, uid, s.config.OdooPass, amount, journalID, paymentMethodID, paymentMethodID)
-	
-	_, err = utils.XMLRPCCall(s.config.OdooURL, "/xmlrpc/2/object", xml)
-	return err
+	return s.InvoiceService.PayInvoice(invoiceID, journalID, paymentMethodID, amount, uid)
 }
 
 // CreateLead creates a lead
