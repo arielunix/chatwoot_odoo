@@ -24,6 +24,7 @@ import PhoneIcon from '@mui/icons-material/Phone';
 import AddShoppingCartIcon from '@mui/icons-material/AddShoppingCart';
 import SendIcon from '@mui/icons-material/Send';
 import PictureAsPdfIcon from '@mui/icons-material/PictureAsPdf';
+import InfoIcon from '@mui/icons-material/Info';
 
 export default function ContactModule({ data, odooCustomer, onCreateCustomer, isDarkMode = false, odooLoading }) {
 
@@ -74,6 +75,7 @@ export default function ContactModule({ data, odooCustomer, onCreateCustomer, is
   const [loadingQuotesList, setLoadingQuotesList] = useState(false);
   const [customerSearched, setCustomerSearched] = useState(false);
   const [creatingInvoice, setCreatingInvoice] = useState(false);
+  const [registeringPayment, setRegisteringPayment] = useState(false);
 
   useEffect(() => {
     if (odooCustomer && showCustomerAlert) {
@@ -273,6 +275,7 @@ export default function ContactModule({ data, odooCustomer, onCreateCustomer, is
   const handleRegisterPayment = async () => {
     if (!selectedInvoice || !paymentAmount || !selectedJournalId || !selectedPaymentMethodId) return;
 
+    setRegisteringPayment(true);
     try {
       const result = await registerPayment(
         selectedInvoice.id,
@@ -309,6 +312,8 @@ export default function ContactModule({ data, odooCustomer, onCreateCustomer, is
       setInvoiceMessage("Error al registrar pago: " + err.message);
       setInvoiceSeverity("error");
       setTimeout(() => setInvoiceMessage(null), 5000);
+    } finally {
+      setRegisteringPayment(false);
     }
   };
 
@@ -1243,6 +1248,14 @@ export default function ContactModule({ data, odooCustomer, onCreateCustomer, is
                         ))}
                       </Select>
                     </FormControl>
+                    <Tooltip title="El diario debe estar configurado correctamente con un método de pago. Si obtiene el error 'Defina una línea de método de pago en su pago', seleccione un diario válido como Efectivo o Banco.">
+                      <Box sx={{ display: 'flex', alignItems: 'center', mt: 0.5 }}>
+                        <InfoIcon sx={{ fontSize: 14, color: isDarkMode ? '#aaa' : '#6c757d' }} />
+                        <Typography variant="caption" sx={{ fontSize: 11, color: isDarkMode ? '#aaa' : '#6c757d', ml: 0.5 }}>
+                          El diario debe estar configurado correctamente
+                        </Typography>
+                      </Box>
+                    </Tooltip>
                   </Box>
                   <Box>
                     <Typography variant="caption" sx={{ fontSize: 12, color: isDarkMode ? '#aaa' : '#6c757d', mb: 0.5, display: 'block' }}>
@@ -1279,9 +1292,10 @@ export default function ContactModule({ data, odooCustomer, onCreateCustomer, is
               variant="contained"
               color="success"
               sx={{ fontSize: 13 }}
-              disabled={!paymentAmount || !selectedJournalId || !selectedPaymentMethodId}
+              disabled={!paymentAmount || !selectedJournalId || !selectedPaymentMethodId || registeringPayment}
+              startIcon={registeringPayment ? <CircularProgress size={16} /> : null}
             >
-              Registrar Pago
+              {registeringPayment ? "Procesando..." : "Registrar Pago"}
             </Button>
           )}
         </DialogActions>
