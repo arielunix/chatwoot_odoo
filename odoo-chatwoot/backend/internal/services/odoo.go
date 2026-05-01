@@ -12,6 +12,7 @@ type OdooService struct {
 	config        *config.Config
 	uidCache      *int
 	ReportService *odoo.ReportService
+	InvoiceService *odoo.InvoiceService
 }
 
 func NewOdooService(cfg *config.Config) *OdooService {
@@ -19,6 +20,7 @@ func NewOdooService(cfg *config.Config) *OdooService {
 		config:        cfg,
 		uidCache:      nil,
 		ReportService: odoo.NewReportService(cfg),
+		InvoiceService: odoo.NewInvoiceService(cfg),
 	}
 }
 
@@ -462,6 +464,7 @@ func (s *OdooService) GetQuoteDetail(id int) (*utils.QuoteDetail, error) {
                 <value><string>state</string></value>
                 <value><string>note</string></value>
                 <value><string>invoice_count</string></value>
+                <value><string>order_line</string></value>
               </data>
             </array></value>
           </data>
@@ -476,7 +479,64 @@ func (s *OdooService) GetQuoteDetail(id int) (*utils.QuoteDetail, error) {
 		return nil, err
 	}
 	
-	return utils.ParseQuoteDetail(text), nil
+	detail := utils.ParseQuoteDetail(text)
+	
+	// Get order line details if order_line IDs are present
+	if detail.OrderLine != "" {
+		// Parse order_line IDs from the response
+		lineIDs := utils.ParseArray(detail.OrderLine)
+		
+		if len(lineIDs) > 0 {
+			// Build XML-RPC call to get order line details
+			lineIDsXML := ""
+			for _, lineID := range lineIDs {
+				lineIDsXML += fmt.Sprintf(`<value><int>%d</int></value>`, lineID)
+			}
+			
+			xml = fmt.Sprintf(`<?xml version="1.0"?>
+<methodCall>
+  <methodName>execute_kw</methodName>
+  <params>
+    <param><value><string>%s</string></value></param>
+    <param><value><int>%d</int></value></param>
+    <param><value><string>%s</string></value></param>
+    <param><value><string>sale.order.line</string></value></param>
+    <param><value><string>read</string></value></param>
+    <param>
+      <value>
+        <array>
+          <data>
+            <value><array>
+              <data>
+                %s
+              </data>
+            </array></value>
+            <value><array>
+              <data>
+                <value><string>id</string></value>
+                <value><string>name</string></value>
+                <value><string>product_id</string></value>
+                <value><string>product_uom_qty</string></value>
+                <value><string>price_unit</string></value>
+                <value><string>price_subtotal</string></value>
+                <value><string>product_uom</string></value>
+              </data>
+            </array></value>
+          </data>
+        </array>
+      </value>
+    </param>
+  </params>
+</methodCall>`, s.config.OdooDB, uid, s.config.OdooPass, lineIDsXML)
+			
+			lineText, err := utils.XMLRPCCall(s.config.OdooURL, "/xmlrpc/2/object", xml)
+			if err == nil {
+				detail.OrderLines = utils.ParseOrderLines(lineText)
+			}
+		}
+	}
+	
+	return detail, nil
 }
 
 // UpdateQuote updates a quote
@@ -525,57 +585,14 @@ func (s *OdooService) UpdateQuote(id int, data map[string]interface{}) error {
 	return err
 }
 
-// CreateInvoiceFromQuote creates an invoice from a quote
+// CreateInvoiceFromQuote creates an invoice from a quote using the InvoiceService
 func (s *OdooService) CreateInvoiceFromQuote(quoteID int) (int, error) {
 	uid, err := s.GetUID()
 	if err != nil {
 		return 0, err
 	}
 	
-	xml := fmt.Sprintf(`<?xml version="1.0"?>
-<methodCall>
-  <methodName>execute_kw</methodName>
-  <params>
-    <param><value><string>%s</string></value></param>
-    <param><value><int>%d</int></value></param>
-    <param><value><string>%s</string></value></param>
-    <param><value><string>sale.order</string></value></param>
-    <param><value><string>action_create_invoice</string></value></param>
-    <param>
-      <value>
-        <array>
-          <data>
-            <value><array><data><value><int>%d</int></value></data></array></value>
-          </data>
-        </array>
-      </value>
-    </param>
-  </params>
-</methodCall>`, s.config.OdooDB, uid, s.config.OdooPass, quoteID)
-	
-	text, err := utils.XMLRPCCall(s.config.OdooURL, "/xmlrpc/2/object", xml)
-	if err != nil {
-		return 0, err
-	}
-	
-	// Extract invoice ID from response
-	start := strings.Index(text, "<int>")
-	if start == -1 {
-		return 0, fmt.Errorf("create invoice failed: no ID found")
-	}
-	start += 5
-	end := strings.Index(text[start:], "</int>")
-	if end == -1 {
-		return 0, fmt.Errorf("create invoice failed: invalid ID format")
-	}
-	
-	var id int
-	_, err = fmt.Sscanf(text[start:start+end], "%d", &id)
-	if err != nil {
-		return 0, fmt.Errorf("create invoice failed: invalid ID")
-	}
-	
-	return id, nil
+	return s.InvoiceService.CreateInvoiceFromQuote(quoteID, uid)
 }
 
 // GetInvoiceStatus retrieves invoice status

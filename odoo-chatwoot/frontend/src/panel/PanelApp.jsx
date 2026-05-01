@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { Box, Paper, Container, Tabs, Tab, Snackbar, Alert } from "@mui/material";
-import { ContactModule } from "../modules/ContactModule";
+import ContactModule from "../modules/ContactModule";
 import { useOdoo } from "../hooks/useOdoo";
 import PersonAddIcon from '@mui/icons-material/PersonAdd';
 import ShoppingCartIcon from '@mui/icons-material/ShoppingCart';
@@ -14,7 +14,7 @@ export default function PanelApp() {
   const [activeModule, setActiveModule] = useState('contact');
   const [showEnterpriseMessage, setShowEnterpriseMessage] = useState(false);
   const [isDarkMode, setIsDarkMode] = useState(false);
-  const { customer, searchCustomer, setCustomer } = useOdoo();
+  const { customer, searchCustomer, setCustomer, loading } = useOdoo();
 
   // Detectar theme de Chatwoot
   useEffect(() => {
@@ -168,6 +168,7 @@ export default function PanelApp() {
               odooCustomer={customer}
               onCreateCustomer={handleCreateCustomer}
               isDarkMode={isDarkMode}
+              odooLoading={loading}
             />
           )}
         </Box>

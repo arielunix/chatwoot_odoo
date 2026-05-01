@@ -24,16 +24,17 @@ type Quote struct {
 }
 
 type QuoteDetail struct {
-	ID           int     `json:"id"`
-	Name         string  `json:"name"`
-	DateOrder    string  `json:"date_order"`
-	AmountTotal  float64 `json:"amount_total"`
-	AmountUntaxed float64 `json:"amount_untaxed"`
-	AmountTax    float64 `json:"amount_tax"`
-	State        string  `json:"state"`
-	Note         string  `json:"note"`
-	InvoiceCount int     `json:"invoice_count"`
-	OrderLine    string  `json:"order_line"`
+	ID           int         `json:"id"`
+	Name         string      `json:"name"`
+	DateOrder    string      `json:"date_order"`
+	AmountTotal  float64     `json:"amount_total"`
+	AmountUntaxed float64    `json:"amount_untaxed"`
+	AmountTax    float64     `json:"amount_tax"`
+	State        string      `json:"state"`
+	Note         string      `json:"note"`
+	InvoiceCount int         `json:"invoice_count"`
+	OrderLine    string      `json:"order_line"`
+	OrderLines   []OrderLine `json:"order_lines"`
 }
 
 type OrderLine struct {
@@ -75,6 +76,26 @@ type Product struct {
 
 // extractField extracts a field value from XML struct
 func extractField(structXML, field string) interface{} {
+	// For array fields, use a greedy pattern to capture complete arrays
+	if field == "order_line" || field == "invoice_line_ids" {
+		pattern := `<name>` + field + `</name>[\s\S]*?<value>([\s\S]*)</value>`
+		re := regexp.MustCompile(pattern)
+		match := re.FindStringSubmatch(structXML)
+		if match != nil {
+			val := match[1]
+			if strings.Contains(val, "<array>") {
+				// Find the complete array by matching from <array> to </array>
+				arrayPattern := `<array>([\s\S]*?)</array>`
+				arrayMatch := regexp.MustCompile(arrayPattern).FindStringSubmatch(val)
+				if arrayMatch != nil {
+					return arrayMatch[0] // Return complete array including tags
+				}
+			}
+			return val
+		}
+		return nil
+	}
+	
 	pattern := `<name>` + field + `</name>[\s\S]*?<value>([\s\S]*?)</value>`
 	re := regexp.MustCompile(pattern)
 	match := re.FindStringSubmatch(structXML)
@@ -84,34 +105,58 @@ func extractField(structXML, field string) interface{} {
 	
 	val := match[1]
 	
+	// array - capture complete array including nested tags
+	if strings.Contains(val, "<array>") {
+		// Find the complete array by matching from <array> to </array>
+		arrayPattern := `<array>([\s\S]*?)</array>`
+		arrayMatch := regexp.MustCompile(arrayPattern).FindStringSubmatch(val)
+		if arrayMatch != nil {
+			return arrayMatch[0] // Return complete array including tags
+		}
+		return val
+	}
+	
 	// string
-	if str := regexp.MustCompile(`<string>(.*?)</string>`).FindStringSubmatch(val); str != nil {
-		return str[1]
+	if strings.Contains(val, "<string>") {
+		stringPattern := `<string>([\s\S]*?)</string>`
+		stringMatch := regexp.MustCompile(stringPattern).FindStringSubmatch(val)
+		if stringMatch != nil {
+			return stringMatch[1]
+		}
+		return ""
 	}
 	
 	// int
-	if intVal := regexp.MustCompile(`<int>(\d+)</int>`).FindStringSubmatch(val); intVal != nil {
-		num, _ := strconv.Atoi(intVal[1])
-		return num
-	}
-	
-	// double
-	if dbl := regexp.MustCompile(`<double>([\d.]+)</double>`).FindStringSubmatch(val); dbl != nil {
-		num, _ := strconv.ParseFloat(dbl[1], 64)
-		return num
+	if strings.Contains(val, "<int>") {
+		intPattern := `<int>(\d+)</int>`
+		intMatch := regexp.MustCompile(intPattern).FindStringSubmatch(val)
+		if intMatch != nil {
+			if num, err := strconv.Atoi(intMatch[1]); err == nil {
+				return num
+			}
+		}
+		return 0
 	}
 	
 	// boolean
-	if boolVal := regexp.MustCompile(`<boolean>(.*?)</boolean>`).FindStringSubmatch(val); boolVal != nil {
-		return boolVal[1] == "1" || boolVal[1] == "true"
+	if strings.Contains(val, "<boolean>") {
+		return strings.Contains(val, "1")
 	}
 	
-	// array
-	if arr := regexp.MustCompile(`<array>([\s\S]*?)</array>`).FindStringSubmatch(val); arr != nil {
-		return arr[1]
+	// double/float
+	if strings.Contains(val, "<double>") {
+		doublePattern := `<double>([\d.]+)</double>`
+		doubleMatch := regexp.MustCompile(doublePattern).FindStringSubmatch(val)
+		if doubleMatch != nil {
+			if num, err := strconv.ParseFloat(doubleMatch[1], 64); err == nil {
+				return num
+			}
+		}
+		return 0.0
 	}
 	
-	return nil
+	// If no type tags, return as string
+	return val
 }
 
 // ParsePartners parses XML response to Partner structs
@@ -222,6 +267,25 @@ func toFloat(v interface{}) float64 {
 	default:
 		return 0
 	}
+}
+
+// ParseArray parses XML array to extract integer IDs
+func ParseArray(xml string) []int {
+	result := []int{}
+	
+	// Find all <int> tags in the array
+	intPattern := regexp.MustCompile(`<int>(\d+)</int>`)
+	matches := intPattern.FindAllStringSubmatch(xml, -1)
+	
+	for _, match := range matches {
+		if len(match) > 1 {
+			if id, err := strconv.Atoi(match[1]); err == nil {
+				result = append(result, id)
+			}
+		}
+	}
+	
+	return result
 }
 
 // ParseQuoteDetail parses XML response to QuoteDetail struct

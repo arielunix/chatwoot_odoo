@@ -6,7 +6,7 @@ import {
   TextField, Chip, TableFooter,
   Select, MenuItem, FormControl, InputLabel,
   IconButton, Tooltip, Avatar, Fab, InputAdornment,
-  Snackbar
+  Snackbar, CircularProgress, LinearProgress
 } from "@mui/material";
 
 import { useOdoo } from "../hooks/useOdoo";
@@ -25,7 +25,7 @@ import AddShoppingCartIcon from '@mui/icons-material/AddShoppingCart';
 import SendIcon from '@mui/icons-material/Send';
 import PictureAsPdfIcon from '@mui/icons-material/PictureAsPdf';
 
-export const ContactModule = ({ data, odooCustomer, onCreateCustomer, isDarkMode = false }) => {
+export default function ContactModule({ data, odooCustomer, onCreateCustomer, isDarkMode = false, odooLoading }) {
 
   const {
     getQuotes, getQuoteDetail, updateQuote,
@@ -43,8 +43,6 @@ export const ContactModule = ({ data, odooCustomer, onCreateCustomer, isDarkMode
   };
 
   const [quotes, setQuotes] = useState([]);
-  const [loadingQuotes, setLoadingQuotes] = useState(false);
-  const [loading] = useState(false);
   const [selectedQuote, setSelectedQuote] = useState(null);
   const [quoteDialogOpen, setQuoteDialogOpen] = useState(false);
   const [editMode, setEditMode] = useState(false);
@@ -71,6 +69,11 @@ export const ContactModule = ({ data, odooCustomer, onCreateCustomer, isDarkMode
   const [paymentStateFilter, setPaymentStateFilter] = useState("all");
   const [showCustomerAlert, setShowCustomerAlert] = useState(true);
   const [chatwootSnackbar, setChatwootSnackbar] = useState({ open: false, message: '', severity: 'success' });
+  const [sendingPdf, setSendingPdf] = useState(false);
+  const [loadingCustomerSearch, setLoadingCustomerSearch] = useState(false);
+  const [loadingQuotesList, setLoadingQuotesList] = useState(false);
+  const [customerSearched, setCustomerSearched] = useState(false);
+  const [creatingInvoice, setCreatingInvoice] = useState(false);
 
   useEffect(() => {
     if (odooCustomer && showCustomerAlert) {
@@ -79,7 +82,13 @@ export const ContactModule = ({ data, odooCustomer, onCreateCustomer, isDarkMode
       }, 3000);
       return () => clearTimeout(timer);
     }
-  }, [odooCustomer, showCustomerAlert]);
+    
+    // Mostrar alerta de cliente no encontrado solo cuando la búsqueda automática ha terminado
+    if (!odooCustomer && !odooLoading && !customerSearched) {
+      // eslint-disable-next-line react-hooks/set-state-in-effect
+      setCustomerSearched(true);
+    }
+  }, [odooCustomer, showCustomerAlert, odooLoading, customerSearched]);
 
   const filteredQuotes = useMemo(() => {
     return quotes.filter(q => {
@@ -110,7 +119,7 @@ export const ContactModule = ({ data, odooCustomer, onCreateCustomer, isDarkMode
     const loadQuotes = async () => {
       if (!odooCustomer?.id) return;
 
-      setLoadingQuotes(true);
+      setLoadingQuotesList(true);
       try {
         const quotesData = await getQuotes(odooCustomer.id);
         setQuotes(quotesData || []);
@@ -134,7 +143,7 @@ export const ContactModule = ({ data, odooCustomer, onCreateCustomer, isDarkMode
       } catch (err) {
         console.error("Error cargando cotizaciones:", err);
       } finally {
-        setLoadingQuotes(false);
+        setLoadingQuotesList(false);
       }
     };
 
@@ -175,6 +184,9 @@ export const ContactModule = ({ data, odooCustomer, onCreateCustomer, isDarkMode
   };
 
   const handleCreateCustomer = async () => {
+    setLoadingCustomerSearch(true);
+    setChatwootSnackbar({ open: true, message: 'Buscando cliente en Odoo...', severity: 'info' });
+
     try {
       const result = await createCustomer({
         name: data?.data?.conversation?.meta?.sender?.name || 
@@ -185,19 +197,27 @@ export const ContactModule = ({ data, odooCustomer, onCreateCustomer, isDarkMode
                data?.email || data?.contact?.email || "",
       });
       if (result.success) {
+        setChatwootSnackbar({ open: true, message: '✅ Cliente encontrado en Odoo', severity: 'success' });
         onCreateCustomer(result.customer);
       }
     } catch (err) {
       console.error("Error creando cliente:", err);
+      setChatwootSnackbar({ open: true, message: '❌ Error al buscar cliente en Odoo: ' + err.message, severity: 'error' });
+    } finally {
+      setLoadingCustomerSearch(false);
     }
   };
 
   const handleCreateInvoice = async (quoteId) => {
+    setCreatingInvoice(true);
+    setChatwootSnackbar({ open: true, message: 'Creando factura desde cotización...', severity: 'info' });
+
     try {
       const result = await createInvoice(quoteId);
       if (result.success) {
         setInvoiceMessage("Factura creada exitosamente");
         setInvoiceSeverity("success");
+        setChatwootSnackbar({ open: true, message: '✅ Factura creada exitosamente', severity: 'success' });
         setInvoiceStatusMap(prev => ({ 
           ...prev, 
           [quoteId]: { 
@@ -215,7 +235,10 @@ export const ContactModule = ({ data, odooCustomer, onCreateCustomer, isDarkMode
       console.error("Error creando factura:", err);
       setInvoiceMessage("Error al crear factura: " + err.message);
       setInvoiceSeverity("error");
+      setChatwootSnackbar({ open: true, message: '❌ Error al crear factura: ' + err.message, severity: 'error' });
       setTimeout(() => setInvoiceMessage(null), 5000);
+    } finally {
+      setCreatingInvoice(false);
     }
   };
 
@@ -424,15 +447,33 @@ export const ContactModule = ({ data, odooCustomer, onCreateCustomer, isDarkMode
       return;
     }
 
+    // Mostrar estado de carga inmediatamente
+    setSendingPdf(true);
+    setChatwootSnackbar({ open: true, message: 'Generando PDF y enviando a Chatwoot...', severity: 'info' });
+
+    // Timeout para evitar esperas infinitas
+    const timeout = setTimeout(() => {
+      setSendingPdf(false);
+      setChatwootSnackbar({ open: true, message: 'Tiempo de espera agotado. Inténtalo de nuevo.', severity: 'warning' });
+    }, 30000); // 30 segundos timeout
+
     try {
       // Obtener detalle completo de la cotización con sus líneas de productos
       const quoteDetail = await getQuoteDetail(quote.id);
       const conversationId = data.data.conversation.id;
 
-      const result = await generateAndSendQuotePDF(quoteDetail, conversationId);
+      // Generar y enviar PDF de forma asíncrona no bloqueante
+      const result = await Promise.race([
+        generateAndSendQuotePDF(quoteDetail, conversationId),
+        new Promise((_, reject) => 
+          setTimeout(() => reject(new Error('Timeout')), 30000)
+        )
+      ]);
+
+      clearTimeout(timeout);
 
       if (result.success) {
-        setChatwootSnackbar({ open: true, message: 'PDF enviado exitosamente a Chatwoot', severity: 'success' });
+        setChatwootSnackbar({ open: true, message: '✅ PDF enviado exitosamente a Chatwoot', severity: 'success' });
 
         // Actualizar estado de la cotización a 'sent' en Odoo
         try {
@@ -444,11 +485,14 @@ export const ContactModule = ({ data, odooCustomer, onCreateCustomer, isDarkMode
           console.error("Error actualizando estado de cotización:", err);
         }
       } else {
-        setChatwootSnackbar({ open: true, message: 'Error al enviar PDF a Chatwoot: ' + result.error, severity: 'error' });
+        setChatwootSnackbar({ open: true, message: '❌ Error al enviar PDF a Chatwoot: ' + result.error, severity: 'error' });
       }
     } catch (err) {
+      clearTimeout(timeout);
       console.error("Error enviando PDF a Chatwoot:", err);
-      setChatwootSnackbar({ open: true, message: 'Error al enviar PDF a Chatwoot: ' + err.message, severity: 'error' });
+      setChatwootSnackbar({ open: true, message: '❌ Error al enviar PDF a Chatwoot: ' + err.message, severity: 'error' });
+    } finally {
+      setSendingPdf(false);
     }
   };
 
@@ -534,6 +578,19 @@ export const ContactModule = ({ data, odooCustomer, onCreateCustomer, isDarkMode
   return (
     <Box>
 
+      {/* Progress bar for PDF sending and loading operations */}
+      {(sendingPdf || loadingCustomerSearch || loadingQuotesList || creatingInvoice) && (
+        <Box sx={{ width: '100%', mb: 2 }}>
+          <LinearProgress />
+          <Typography variant="caption" sx={{ color: isDarkMode ? '#aaa' : '#666', mt: 1 }}>
+            {sendingPdf ? 'Generando PDF y enviando a Chatwoot...' :
+             loadingCustomerSearch ? 'Buscando cliente en Odoo...' :
+             loadingQuotesList ? 'Cargando cotizaciones...' :
+             creatingInvoice ? 'Creando factura desde cotización...' : ''}
+          </Typography>
+        </Box>
+      )}
+
       {/* HEADER */}
       <Box sx={{ mb: 2 }}>
         {odooCustomer && (
@@ -563,7 +620,7 @@ export const ContactModule = ({ data, odooCustomer, onCreateCustomer, isDarkMode
           <Alert severity="success" sx={{ mb: 2 }} onClose={() => setShowCustomerAlert(false)}>
             Cliente encontrado en Odoo
           </Alert>
-        ) : showCustomerAlert && !odooCustomer ? (
+        ) : showCustomerAlert && !odooCustomer && customerSearched ? (
           <Alert 
             severity="warning" 
             sx={{ mb: 2 }} 
@@ -573,9 +630,10 @@ export const ContactModule = ({ data, odooCustomer, onCreateCustomer, isDarkMode
                 color="inherit" 
                 size="small"
                 onClick={handleCreateCustomer}
-                disabled={loading}
+                disabled={loadingCustomerSearch}
+                startIcon={loadingCustomerSearch ? <CircularProgress size={16} /> : null}
               >
-                {loading ? "Creando..." : "Crear Cliente"}
+                {loadingCustomerSearch ? "Buscando..." : "Crear Cliente"}
               </Button>
             }
           >
@@ -705,10 +763,13 @@ export const ContactModule = ({ data, odooCustomer, onCreateCustomer, isDarkMode
               </Box>
             </Box>
 
-            {loadingQuotes ? (
-              <Typography variant="body2" color={isDarkMode ? "#aaa" : "#6c757d"} sx={{ fontSize: 13 }}>
-                Cargando cotizaciones...
-              </Typography>
+            {loadingQuotesList ? (
+              <Box sx={{ display: 'flex', alignItems: 'center', gap: 2, py: 4 }}>
+                <CircularProgress size={20} />
+                <Typography variant="body2" color={isDarkMode ? "#aaa" : "#6c757d"} sx={{ fontSize: 13 }}>
+                  Cargando cotizaciones...
+                </Typography>
+              </Box>
             ) : quotes.length === 0 ? (
               <Alert severity="info" sx={{ fontSize: 13 }}>
                 No hay cotizaciones pendientes para este cliente
@@ -815,8 +876,13 @@ export const ContactModule = ({ data, odooCustomer, onCreateCustomer, isDarkMode
                                 size="small"
                                 color="error"
                                 onClick={() => handleSendQuotePDF(quote)}
+                                disabled={sendingPdf}
                               >
-                                <PictureAsPdfIcon fontSize="small" />
+                                {sendingPdf ? (
+                                  <CircularProgress size={16} />
+                                ) : (
+                                  <PictureAsPdfIcon fontSize="small" />
+                                )}
                               </IconButton>
                             </Tooltip>
                             {!invoiceStatusMap[quote.id] ? (
@@ -825,8 +891,9 @@ export const ContactModule = ({ data, odooCustomer, onCreateCustomer, isDarkMode
                                   size="small"
                                   color="primary"
                                   onClick={() => handleCreateInvoice(quote.id)}
+                                  disabled={creatingInvoice}
                                 >
-                                  <ReceiptIcon fontSize="small" />
+                                  {creatingInvoice ? <CircularProgress size={16} /> : <ReceiptIcon fontSize="small" />}
                                 </IconButton>
                               </Tooltip>
                             ) : (
@@ -1047,8 +1114,15 @@ export const ContactModule = ({ data, odooCustomer, onCreateCustomer, isDarkMode
             </Button>
           )}
           {!editMode && selectedQuote?.state === 'draft' && !invoiceStatusMap[selectedQuote.id]?.hasInvoice && (
-            <Button onClick={() => handleCreateInvoice(selectedQuote.id)} variant="contained" color="success" sx={{ fontSize: 13 }}>
-              Crear Factura
+            <Button 
+              onClick={() => handleCreateInvoice(selectedQuote.id)} 
+              variant="contained" 
+              color="success" 
+              sx={{ fontSize: 13 }}
+              disabled={creatingInvoice}
+              startIcon={creatingInvoice ? <CircularProgress size={16} /> : null}
+            >
+              {creatingInvoice ? "Creando factura..." : "Crear Factura"}
             </Button>
           )}
         </DialogActions>
