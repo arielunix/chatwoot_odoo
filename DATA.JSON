@@ -1,0 +1,877 @@
+📩 Evento raw: {
+    "event": "appContext",
+    "data": {
+        "conversation": {
+            "meta": {
+                "sender": {
+                    "additional_attributes": {
+                        "city": "",
+                        "country": "",
+                        "description": "",
+                        "company_name": "",
+                        "country_code": "",
+                        "avatar_url_hash": "64587ccbb9e6dc6423e7ede80354cacf2d5a5fb33424b08724e9f03299655fb4",
+                        "social_profiles": {
+                            "github": "",
+                            "tiktok": "",
+                            "twitter": "",
+                            "facebook": "",
+                            "linkedin": "",
+                            "telegram": "",
+                            "instagram": ""
+                        },
+                        "last_avatar_sync_at": "2026-04-29T18:10:22Z"
+                    },
+                    "availability_status": "offline",
+                    "email": null,
+                    "id": 227,
+                    "name": "✨ Melissa.. bella",
+                    "phone_number": "+59170714778",
+                    "blocked": false,
+                    "identifier": null,
+                    "thumbnail": "http://localhost:3000/rails/active_storage/representations/redirect/eyJfcmFpbHMiOnsibWVzc2FnZSI6IkJBaHBBaFVDIiwiZXhwIjpudWxsLCJwdXIiOiJibG9iX2lkIn19--aac84a58adc8ab927508299e53eb4698e2f3b06e/eyJfcmFpbHMiOnsibWVzc2FnZSI6IkJBaDdCem9MWm05eWJXRjBTU0lJYW5CbkJqb0dSVlE2RTNKbGMybDZaVjkwYjE5bWFXeHNXd2RwQWZvdyIsImV4cCI6bnVsbCwicHVyIjoidmFyaWF0aW9uIn19--9e128501e524113b1b4ea340c68c866d01ea19dd/file.enc",
+                    "custom_attributes": {
+                        "waha_whatsapp_jid": "59170714778@c.us",
+                        "waha_whatsapp_lid": "209916627255428@lid",
+                        "waha_whatsapp_chat_id": "209916627255428@lid"
+                    },
+                    "last_activity_at": 1777491858,
+                    "created_at": 1777482425
+                },
+                "channel": "Channel::Api",
+                "assignee": {
+                    "id": 3,
+                    "account_id": 4,
+                    "availability_status": "online",
+                    "auto_offline": true,
+                    "confirmed": true,
+                    "email": "john@acme.inc",
+                    "provider": "email",
+                    "available_name": "John",
+                    "name": "John",
+                    "role": "administrator",
+                    "thumbnail": "http://localhost:3000/rails/active_storage/representations/redirect/eyJfcmFpbHMiOnsibWVzc2FnZSI6IkJBaHBBc3dCIiwiZXhwIjpudWxsLCJwdXIiOiJibG9iX2lkIn19--57fcce6711a1d8dbe3f0028930ce986d8f006382/eyJfcmFpbHMiOnsibWVzc2FnZSI6IkJBaDdCem9MWm05eWJXRjBTU0lJYW5CbkJqb0dSVlE2RTNKbGMybDZaVjkwYjE5bWFXeHNXd2RwQWZvdyIsImV4cCI6bnVsbCwicHVyIjoidmFyaWF0aW9uIn19--9e128501e524113b1b4ea340c68c866d01ea19dd/chica-bonita-tocandose-cara_1153-1023.jpg",
+                    "custom_role_id": null
+                },
+                "assignee_type": "User",
+                "hmac_verified": false
+            },
+            "id": 91,
+            "messages": [
+                {
+                    "id": 2244,
+                    "content": "*📱 Enviado desde WhatsApp*\n\neste es el panel de administracion de todos los clientes.... en una sola bandeja de todos los canales de comunicacion.",
+                    "inbox_id": 140,
+                    "conversation_id": 91,
+                    "message_type": 1,
+                    "content_type": "text",
+                    "status": "read",
+                    "content_attributes": {},
+                    "created_at": 1777489357,
+                    "private": true,
+                    "source_id": null,
+                    "sender": {
+                        "id": 3,
+                        "name": "John",
+                        "available_name": "John",
+                        "avatar_url": "http://localhost:3000/rails/active_storage/representations/redirect/eyJfcmFpbHMiOnsibWVzc2FnZSI6IkJBaHBBc3dCIiwiZXhwIjpudWxsLCJwdXIiOiJibG9iX2lkIn19--57fcce6711a1d8dbe3f0028930ce986d8f006382/eyJfcmFpbHMiOnsibWVzc2FnZSI6IkJBaDdCem9MWm05eWJXRjBTU0lJYW5CbkJqb0dSVlE2RTNKbGMybDZaVjkwYjE5bWFXeHNXd2RwQWZvdyIsImV4cCI6bnVsbCwicHVyIjoidmFyaWF0aW9uIn19--9e128501e524113b1b4ea340c68c866d01ea19dd/chica-bonita-tocandose-cara_1153-1023.jpg",
+                        "type": "user",
+                        "availability_status": "online",
+                        "thumbnail": "http://localhost:3000/rails/active_storage/representations/redirect/eyJfcmFpbHMiOnsibWVzc2FnZSI6IkJBaHBBc3dCIiwiZXhwIjpudWxsLCJwdXIiOiJibG9iX2lkIn19--57fcce6711a1d8dbe3f0028930ce986d8f006382/eyJfcmFpbHMiOnsibWVzc2FnZSI6IkJBaDdCem9MWm05eWJXRjBTU0lJYW5CbkJqb0dSVlE2RTNKbGMybDZaVjkwYjE5bWFXeHNXd2RwQWZvdyIsImV4cCI6bnVsbCwicHVyIjoidmFyaWF0aW9uIn19--9e128501e524113b1b4ea340c68c866d01ea19dd/chica-bonita-tocandose-cara_1153-1023.jpg"
+                    },
+                    "attachments": [
+                        {
+                            "id": 342,
+                            "message_id": 2244,
+                            "file_type": "image",
+                            "account_id": 4,
+                            "extension": null,
+                            "data_url": "http://localhost:3000/rails/active_storage/blobs/redirect/eyJfcmFpbHMiOnsibWVzc2FnZSI6IkJBaHBBaUVDIiwiZXhwIjpudWxsLCJwdXIiOiJibG9iX2lkIn19--528931cdfebb6074a75189c87052078ae4255673/no-filename.jpeg",
+                            "thumb_url": "http://localhost:3000/rails/active_storage/representations/redirect/eyJfcmFpbHMiOnsibWVzc2FnZSI6IkJBaHBBaUVDIiwiZXhwIjpudWxsLCJwdXIiOiJibG9iX2lkIn19--528931cdfebb6074a75189c87052078ae4255673/eyJfcmFpbHMiOnsibWVzc2FnZSI6IkJBaDdCem9MWm05eWJXRjBTU0lKYW5CbFp3WTZCa1ZVT2hOeVpYTnBlbVZmZEc5ZlptbHNiRnNIYVFINk1BPT0iLCJleHAiOm51bGwsInB1ciI6InZhcmlhdGlvbiJ9fQ==--22e2900e3dbd175cd55773375118966d12188b41/no-filename.jpeg",
+                            "file_size": 211502,
+                            "width": 1600,
+                            "height": 850
+                        }
+                    ]
+                },
+                {
+                    "id": 2245,
+                    "content": "*📱 Enviado desde WhatsApp*\n\nun CRM de todos tus canales.",
+                    "inbox_id": 140,
+                    "conversation_id": 91,
+                    "message_type": 1,
+                    "content_type": "text",
+                    "status": "read",
+                    "content_attributes": {},
+                    "created_at": 1777489362,
+                    "private": true,
+                    "source_id": null,
+                    "sender": {
+                        "id": 3,
+                        "name": "John",
+                        "available_name": "John",
+                        "avatar_url": "http://localhost:3000/rails/active_storage/representations/redirect/eyJfcmFpbHMiOnsibWVzc2FnZSI6IkJBaHBBc3dCIiwiZXhwIjpudWxsLCJwdXIiOiJibG9iX2lkIn19--57fcce6711a1d8dbe3f0028930ce986d8f006382/eyJfcmFpbHMiOnsibWVzc2FnZSI6IkJBaDdCem9MWm05eWJXRjBTU0lJYW5CbkJqb0dSVlE2RTNKbGMybDZaVjkwYjE5bWFXeHNXd2RwQWZvdyIsImV4cCI6bnVsbCwicHVyIjoidmFyaWF0aW9uIn19--9e128501e524113b1b4ea340c68c866d01ea19dd/chica-bonita-tocandose-cara_1153-1023.jpg",
+                        "type": "user",
+                        "availability_status": "online",
+                        "thumbnail": "http://localhost:3000/rails/active_storage/representations/redirect/eyJfcmFpbHMiOnsibWVzc2FnZSI6IkJBaHBBc3dCIiwiZXhwIjpudWxsLCJwdXIiOiJibG9iX2lkIn19--57fcce6711a1d8dbe3f0028930ce986d8f006382/eyJfcmFpbHMiOnsibWVzc2FnZSI6IkJBaDdCem9MWm05eWJXRjBTU0lJYW5CbkJqb0dSVlE2RTNKbGMybDZaVjkwYjE5bWFXeHNXd2RwQWZvdyIsImV4cCI6bnVsbCwicHVyIjoidmFyaWF0aW9uIn19--9e128501e524113b1b4ea340c68c866d01ea19dd/chica-bonita-tocandose-cara_1153-1023.jpg"
+                    }
+                },
+                {
+                    "id": 2246,
+                    "content": "JJaja no quieres una demo.",
+                    "inbox_id": 140,
+                    "conversation_id": 91,
+                    "message_type": 1,
+                    "content_type": "text",
+                    "status": "read",
+                    "content_attributes": {},
+                    "created_at": 1777489420,
+                    "private": false,
+                    "source_id": null,
+                    "sender": {
+                        "id": 3,
+                        "name": "John",
+                        "available_name": "John",
+                        "avatar_url": "http://localhost:3000/rails/active_storage/representations/redirect/eyJfcmFpbHMiOnsibWVzc2FnZSI6IkJBaHBBc3dCIiwiZXhwIjpudWxsLCJwdXIiOiJibG9iX2lkIn19--57fcce6711a1d8dbe3f0028930ce986d8f006382/eyJfcmFpbHMiOnsibWVzc2FnZSI6IkJBaDdCem9MWm05eWJXRjBTU0lJYW5CbkJqb0dSVlE2RTNKbGMybDZaVjkwYjE5bWFXeHNXd2RwQWZvdyIsImV4cCI6bnVsbCwicHVyIjoidmFyaWF0aW9uIn19--9e128501e524113b1b4ea340c68c866d01ea19dd/chica-bonita-tocandose-cara_1153-1023.jpg",
+                        "type": "user",
+                        "availability_status": "online",
+                        "thumbnail": "http://localhost:3000/rails/active_storage/representations/redirect/eyJfcmFpbHMiOnsibWVzc2FnZSI6IkJBaHBBc3dCIiwiZXhwIjpudWxsLCJwdXIiOiJibG9iX2lkIn19--57fcce6711a1d8dbe3f0028930ce986d8f006382/eyJfcmFpbHMiOnsibWVzc2FnZSI6IkJBaDdCem9MWm05eWJXRjBTU0lJYW5CbkJqb0dSVlE2RTNKbGMybDZaVjkwYjE5bWFXeHNXd2RwQWZvdyIsImV4cCI6bnVsbCwicHVyIjoidmFyaWF0aW9uIn19--9e128501e524113b1b4ea340c68c866d01ea19dd/chica-bonita-tocandose-cara_1153-1023.jpg"
+                    }
+                },
+                {
+                    "id": 2248,
+                    "content": "No entiendo nd",
+                    "inbox_id": 140,
+                    "conversation_id": 91,
+                    "message_type": 0,
+                    "content_type": "text",
+                    "status": "sent",
+                    "content_attributes": {},
+                    "created_at": 1777489548,
+                    "private": false,
+                    "source_id": null,
+                    "sender": {
+                        "additional_attributes": {
+                            "city": "",
+                            "country": "",
+                            "description": "",
+                            "company_name": "",
+                            "country_code": "",
+                            "avatar_url_hash": "64587ccbb9e6dc6423e7ede80354cacf2d5a5fb33424b08724e9f03299655fb4",
+                            "social_profiles": {
+                                "github": "",
+                                "tiktok": "",
+                                "twitter": "",
+                                "facebook": "",
+                                "linkedin": "",
+                                "telegram": "",
+                                "instagram": ""
+                            },
+                            "last_avatar_sync_at": "2026-04-29T18:10:22Z"
+                        },
+                        "custom_attributes": {
+                            "waha_whatsapp_jid": "59170714778@c.us",
+                            "waha_whatsapp_lid": "209916627255428@lid",
+                            "waha_whatsapp_chat_id": "209916627255428@lid"
+                        },
+                        "email": null,
+                        "id": 227,
+                        "identifier": null,
+                        "name": "✨ Melissa.. bella",
+                        "phone_number": "+59170714778",
+                        "thumbnail": "http://localhost:3000/rails/active_storage/representations/redirect/eyJfcmFpbHMiOnsibWVzc2FnZSI6IkJBaHBBaFVDIiwiZXhwIjpudWxsLCJwdXIiOiJibG9iX2lkIn19--aac84a58adc8ab927508299e53eb4698e2f3b06e/eyJfcmFpbHMiOnsibWVzc2FnZSI6IkJBaDdCem9MWm05eWJXRjBTU0lJYW5CbkJqb0dSVlE2RTNKbGMybDZaVjkwYjE5bWFXeHNXd2RwQWZvdyIsImV4cCI6bnVsbCwicHVyIjoidmFyaWF0aW9uIn19--9e128501e524113b1b4ea340c68c866d01ea19dd/file.enc",
+                        "blocked": false,
+                        "type": "contact"
+                    }
+                },
+                {
+                    "id": 2249,
+                    "content": "no soy bueno explicando pero en resumen, es una plataforma de atención al cliente y CRM diseñada para centralizar conversaciones de múltiples canales —WhatsApp, Instagram, Facebook, Telegram, email, sitios web— en una sola bandeja de entrada compartida. Permite a equipos gestionar soporte, automatizar respuestas y asignar conversaciones, mejorando la eficiencia y experiencia del cliente. ",
+                    "inbox_id": 140,
+                    "conversation_id": 91,
+                    "message_type": 1,
+                    "content_type": "text",
+                    "status": "read",
+                    "content_attributes": {},
+                    "created_at": 1777489681,
+                    "private": false,
+                    "source_id": null,
+                    "sender": {
+                        "id": 3,
+                        "name": "John",
+                        "available_name": "John",
+                        "avatar_url": "http://localhost:3000/rails/active_storage/representations/redirect/eyJfcmFpbHMiOnsibWVzc2FnZSI6IkJBaHBBc3dCIiwiZXhwIjpudWxsLCJwdXIiOiJibG9iX2lkIn19--57fcce6711a1d8dbe3f0028930ce986d8f006382/eyJfcmFpbHMiOnsibWVzc2FnZSI6IkJBaDdCem9MWm05eWJXRjBTU0lJYW5CbkJqb0dSVlE2RTNKbGMybDZaVjkwYjE5bWFXeHNXd2RwQWZvdyIsImV4cCI6bnVsbCwicHVyIjoidmFyaWF0aW9uIn19--9e128501e524113b1b4ea340c68c866d01ea19dd/chica-bonita-tocandose-cara_1153-1023.jpg",
+                        "type": "user",
+                        "availability_status": "online",
+                        "thumbnail": "http://localhost:3000/rails/active_storage/representations/redirect/eyJfcmFpbHMiOnsibWVzc2FnZSI6IkJBaHBBc3dCIiwiZXhwIjpudWxsLCJwdXIiOiJibG9iX2lkIn19--57fcce6711a1d8dbe3f0028930ce986d8f006382/eyJfcmFpbHMiOnsibWVzc2FnZSI6IkJBaDdCem9MWm05eWJXRjBTU0lJYW5CbkJqb0dSVlE2RTNKbGMybDZaVjkwYjE5bWFXeHNXd2RwQWZvdyIsImV4cCI6bnVsbCwicHVyIjoidmFyaWF0aW9uIn19--9e128501e524113b1b4ea340c68c866d01ea19dd/chica-bonita-tocandose-cara_1153-1023.jpg"
+                    }
+                },
+                {
+                    "id": 2250,
+                    "content": "Ahh bien",
+                    "inbox_id": 140,
+                    "conversation_id": 91,
+                    "message_type": 0,
+                    "content_type": "text",
+                    "status": "sent",
+                    "content_attributes": {},
+                    "created_at": 1777489722,
+                    "private": false,
+                    "source_id": null,
+                    "sender": {
+                        "additional_attributes": {
+                            "city": "",
+                            "country": "",
+                            "description": "",
+                            "company_name": "",
+                            "country_code": "",
+                            "avatar_url_hash": "64587ccbb9e6dc6423e7ede80354cacf2d5a5fb33424b08724e9f03299655fb4",
+                            "social_profiles": {
+                                "github": "",
+                                "tiktok": "",
+                                "twitter": "",
+                                "facebook": "",
+                                "linkedin": "",
+                                "telegram": "",
+                                "instagram": ""
+                            },
+                            "last_avatar_sync_at": "2026-04-29T18:10:22Z"
+                        },
+                        "custom_attributes": {
+                            "waha_whatsapp_jid": "59170714778@c.us",
+                            "waha_whatsapp_lid": "209916627255428@lid",
+                            "waha_whatsapp_chat_id": "209916627255428@lid"
+                        },
+                        "email": null,
+                        "id": 227,
+                        "identifier": null,
+                        "name": "✨ Melissa.. bella",
+                        "phone_number": "+59170714778",
+                        "thumbnail": "http://localhost:3000/rails/active_storage/representations/redirect/eyJfcmFpbHMiOnsibWVzc2FnZSI6IkJBaHBBaFVDIiwiZXhwIjpudWxsLCJwdXIiOiJibG9iX2lkIn19--aac84a58adc8ab927508299e53eb4698e2f3b06e/eyJfcmFpbHMiOnsibWVzc2FnZSI6IkJBaDdCem9MWm05eWJXRjBTU0lJYW5CbkJqb0dSVlE2RTNKbGMybDZaVjkwYjE5bWFXeHNXd2RwQWZvdyIsImV4cCI6bnVsbCwicHVyIjoidmFyaWF0aW9uIn19--9e128501e524113b1b4ea340c68c866d01ea19dd/file.enc",
+                        "blocked": false,
+                        "type": "contact"
+                    }
+                },
+                {
+                    "id": 2251,
+                    "content": "Jajjajaj",
+                    "inbox_id": 140,
+                    "conversation_id": 91,
+                    "message_type": 0,
+                    "content_type": "text",
+                    "status": "sent",
+                    "content_attributes": {},
+                    "created_at": 1777489723,
+                    "private": false,
+                    "source_id": null,
+                    "sender": {
+                        "additional_attributes": {
+                            "city": "",
+                            "country": "",
+                            "description": "",
+                            "company_name": "",
+                            "country_code": "",
+                            "avatar_url_hash": "64587ccbb9e6dc6423e7ede80354cacf2d5a5fb33424b08724e9f03299655fb4",
+                            "social_profiles": {
+                                "github": "",
+                                "tiktok": "",
+                                "twitter": "",
+                                "facebook": "",
+                                "linkedin": "",
+                                "telegram": "",
+                                "instagram": ""
+                            },
+                            "last_avatar_sync_at": "2026-04-29T18:10:22Z"
+                        },
+                        "custom_attributes": {
+                            "waha_whatsapp_jid": "59170714778@c.us",
+                            "waha_whatsapp_lid": "209916627255428@lid",
+                            "waha_whatsapp_chat_id": "209916627255428@lid"
+                        },
+                        "email": null,
+                        "id": 227,
+                        "identifier": null,
+                        "name": "✨ Melissa.. bella",
+                        "phone_number": "+59170714778",
+                        "thumbnail": "http://localhost:3000/rails/active_storage/representations/redirect/eyJfcmFpbHMiOnsibWVzc2FnZSI6IkJBaHBBaFVDIiwiZXhwIjpudWxsLCJwdXIiOiJibG9iX2lkIn19--aac84a58adc8ab927508299e53eb4698e2f3b06e/eyJfcmFpbHMiOnsibWVzc2FnZSI6IkJBaDdCem9MWm05eWJXRjBTU0lJYW5CbkJqb0dSVlE2RTNKbGMybDZaVjkwYjE5bWFXeHNXd2RwQWZvdyIsImV4cCI6bnVsbCwicHVyIjoidmFyaWF0aW9uIn19--9e128501e524113b1b4ea340c68c866d01ea19dd/file.enc",
+                        "blocked": false,
+                        "type": "contact"
+                    }
+                },
+                {
+                    "id": 2252,
+                    "content": "Y yo q tengo q ver cn eso juajajajajaja",
+                    "inbox_id": 140,
+                    "conversation_id": 91,
+                    "message_type": 0,
+                    "content_type": "text",
+                    "status": "sent",
+                    "content_attributes": {},
+                    "created_at": 1777489738,
+                    "private": false,
+                    "source_id": null,
+                    "sender": {
+                        "additional_attributes": {
+                            "city": "",
+                            "country": "",
+                            "description": "",
+                            "company_name": "",
+                            "country_code": "",
+                            "avatar_url_hash": "64587ccbb9e6dc6423e7ede80354cacf2d5a5fb33424b08724e9f03299655fb4",
+                            "social_profiles": {
+                                "github": "",
+                                "tiktok": "",
+                                "twitter": "",
+                                "facebook": "",
+                                "linkedin": "",
+                                "telegram": "",
+                                "instagram": ""
+                            },
+                            "last_avatar_sync_at": "2026-04-29T18:10:22Z"
+                        },
+                        "custom_attributes": {
+                            "waha_whatsapp_jid": "59170714778@c.us",
+                            "waha_whatsapp_lid": "209916627255428@lid",
+                            "waha_whatsapp_chat_id": "209916627255428@lid"
+                        },
+                        "email": null,
+                        "id": 227,
+                        "identifier": null,
+                        "name": "✨ Melissa.. bella",
+                        "phone_number": "+59170714778",
+                        "thumbnail": "http://localhost:3000/rails/active_storage/representations/redirect/eyJfcmFpbHMiOnsibWVzc2FnZSI6IkJBaHBBaFVDIiwiZXhwIjpudWxsLCJwdXIiOiJibG9iX2lkIn19--aac84a58adc8ab927508299e53eb4698e2f3b06e/eyJfcmFpbHMiOnsibWVzc2FnZSI6IkJBaDdCem9MWm05eWJXRjBTU0lJYW5CbkJqb0dSVlE2RTNKbGMybDZaVjkwYjE5bWFXeHNXd2RwQWZvdyIsImV4cCI6bnVsbCwicHVyIjoidmFyaWF0aW9uIn19--9e128501e524113b1b4ea340c68c866d01ea19dd/file.enc",
+                        "blocked": false,
+                        "type": "contact"
+                    }
+                },
+                {
+                    "id": 2253,
+                    "content": "John auto-asignado a esta conversación",
+                    "inbox_id": 140,
+                    "conversation_id": 91,
+                    "message_type": 2,
+                    "content_type": "text",
+                    "status": "read",
+                    "content_attributes": {},
+                    "created_at": 1777489791,
+                    "private": false,
+                    "source_id": null
+                },
+                {
+                    "id": 2255,
+                    "content": "en que area trabajas tienes equipo de trabajo, esto te serviria para orgnizar y atender a tus clientes. o algun proceso a automtizar.",
+                    "inbox_id": 140,
+                    "conversation_id": 91,
+                    "message_type": 1,
+                    "content_type": "text",
+                    "status": "read",
+                    "content_attributes": {},
+                    "created_at": 1777490050,
+                    "private": false,
+                    "source_id": null,
+                    "sender": {
+                        "id": 3,
+                        "name": "John",
+                        "available_name": "John",
+                        "avatar_url": "http://localhost:3000/rails/active_storage/representations/redirect/eyJfcmFpbHMiOnsibWVzc2FnZSI6IkJBaHBBc3dCIiwiZXhwIjpudWxsLCJwdXIiOiJibG9iX2lkIn19--57fcce6711a1d8dbe3f0028930ce986d8f006382/eyJfcmFpbHMiOnsibWVzc2FnZSI6IkJBaDdCem9MWm05eWJXRjBTU0lJYW5CbkJqb0dSVlE2RTNKbGMybDZaVjkwYjE5bWFXeHNXd2RwQWZvdyIsImV4cCI6bnVsbCwicHVyIjoidmFyaWF0aW9uIn19--9e128501e524113b1b4ea340c68c866d01ea19dd/chica-bonita-tocandose-cara_1153-1023.jpg",
+                        "type": "user",
+                        "availability_status": "online",
+                        "thumbnail": "http://localhost:3000/rails/active_storage/representations/redirect/eyJfcmFpbHMiOnsibWVzc2FnZSI6IkJBaHBBc3dCIiwiZXhwIjpudWxsLCJwdXIiOiJibG9iX2lkIn19--57fcce6711a1d8dbe3f0028930ce986d8f006382/eyJfcmFpbHMiOnsibWVzc2FnZSI6IkJBaDdCem9MWm05eWJXRjBTU0lJYW5CbkJqb0dSVlE2RTNKbGMybDZaVjkwYjE5bWFXeHNXd2RwQWZvdyIsImV4cCI6bnVsbCwicHVyIjoidmFyaWF0aW9uIn19--9e128501e524113b1b4ea340c68c866d01ea19dd/chica-bonita-tocandose-cara_1153-1023.jpg"
+                    }
+                },
+                {
+                    "id": 2256,
+                    "content": "en resumen.",
+                    "inbox_id": 140,
+                    "conversation_id": 91,
+                    "message_type": 1,
+                    "content_type": "text",
+                    "status": "read",
+                    "content_attributes": {},
+                    "created_at": 1777490055,
+                    "private": false,
+                    "source_id": null,
+                    "sender": {
+                        "id": 3,
+                        "name": "John",
+                        "available_name": "John",
+                        "avatar_url": "http://localhost:3000/rails/active_storage/representations/redirect/eyJfcmFpbHMiOnsibWVzc2FnZSI6IkJBaHBBc3dCIiwiZXhwIjpudWxsLCJwdXIiOiJibG9iX2lkIn19--57fcce6711a1d8dbe3f0028930ce986d8f006382/eyJfcmFpbHMiOnsibWVzc2FnZSI6IkJBaDdCem9MWm05eWJXRjBTU0lJYW5CbkJqb0dSVlE2RTNKbGMybDZaVjkwYjE5bWFXeHNXd2RwQWZvdyIsImV4cCI6bnVsbCwicHVyIjoidmFyaWF0aW9uIn19--9e128501e524113b1b4ea340c68c866d01ea19dd/chica-bonita-tocandose-cara_1153-1023.jpg",
+                        "type": "user",
+                        "availability_status": "online",
+                        "thumbnail": "http://localhost:3000/rails/active_storage/representations/redirect/eyJfcmFpbHMiOnsibWVzc2FnZSI6IkJBaHBBc3dCIiwiZXhwIjpudWxsLCJwdXIiOiJibG9iX2lkIn19--57fcce6711a1d8dbe3f0028930ce986d8f006382/eyJfcmFpbHMiOnsibWVzc2FnZSI6IkJBaDdCem9MWm05eWJXRjBTU0lJYW5CbkJqb0dSVlE2RTNKbGMybDZaVjkwYjE5bWFXeHNXd2RwQWZvdyIsImV4cCI6bnVsbCwicHVyIjoidmFyaWF0aW9uIn19--9e128501e524113b1b4ea340c68c866d01ea19dd/chica-bonita-tocandose-cara_1153-1023.jpg"
+                    }
+                },
+                {
+                    "id": 2257,
+                    "content": "podrias probarlo gratis sin costo alguno.",
+                    "inbox_id": 140,
+                    "conversation_id": 91,
+                    "message_type": 1,
+                    "content_type": "text",
+                    "status": "read",
+                    "content_attributes": {},
+                    "created_at": 1777490711,
+                    "private": false,
+                    "source_id": null,
+                    "sender": {
+                        "id": 3,
+                        "name": "John",
+                        "available_name": "John",
+                        "avatar_url": "http://localhost:3000/rails/active_storage/representations/redirect/eyJfcmFpbHMiOnsibWVzc2FnZSI6IkJBaHBBc3dCIiwiZXhwIjpudWxsLCJwdXIiOiJibG9iX2lkIn19--57fcce6711a1d8dbe3f0028930ce986d8f006382/eyJfcmFpbHMiOnsibWVzc2FnZSI6IkJBaDdCem9MWm05eWJXRjBTU0lJYW5CbkJqb0dSVlE2RTNKbGMybDZaVjkwYjE5bWFXeHNXd2RwQWZvdyIsImV4cCI6bnVsbCwicHVyIjoidmFyaWF0aW9uIn19--9e128501e524113b1b4ea340c68c866d01ea19dd/chica-bonita-tocandose-cara_1153-1023.jpg",
+                        "type": "user",
+                        "availability_status": "online",
+                        "thumbnail": "http://localhost:3000/rails/active_storage/representations/redirect/eyJfcmFpbHMiOnsibWVzc2FnZSI6IkJBaHBBc3dCIiwiZXhwIjpudWxsLCJwdXIiOiJibG9iX2lkIn19--57fcce6711a1d8dbe3f0028930ce986d8f006382/eyJfcmFpbHMiOnsibWVzc2FnZSI6IkJBaDdCem9MWm05eWJXRjBTU0lJYW5CbkJqb0dSVlE2RTNKbGMybDZaVjkwYjE5bWFXeHNXd2RwQWZvdyIsImV4cCI6bnVsbCwicHVyIjoidmFyaWF0aW9uIn19--9e128501e524113b1b4ea340c68c866d01ea19dd/chica-bonita-tocandose-cara_1153-1023.jpg"
+                    }
+                },
+                {
+                    "id": 2262,
+                    "content": "*📱 Enviado desde WhatsApp*\n\nhaber cuentame que servicios o productos ofrecen y te comento. si lo necesitas o no.",
+                    "inbox_id": 140,
+                    "conversation_id": 91,
+                    "message_type": 1,
+                    "content_type": "text",
+                    "status": "read",
+                    "content_attributes": {},
+                    "created_at": 1777490859,
+                    "private": true,
+                    "source_id": null,
+                    "sender": {
+                        "id": 3,
+                        "name": "John",
+                        "available_name": "John",
+                        "avatar_url": "http://localhost:3000/rails/active_storage/representations/redirect/eyJfcmFpbHMiOnsibWVzc2FnZSI6IkJBaHBBc3dCIiwiZXhwIjpudWxsLCJwdXIiOiJibG9iX2lkIn19--57fcce6711a1d8dbe3f0028930ce986d8f006382/eyJfcmFpbHMiOnsibWVzc2FnZSI6IkJBaDdCem9MWm05eWJXRjBTU0lJYW5CbkJqb0dSVlE2RTNKbGMybDZaVjkwYjE5bWFXeHNXd2RwQWZvdyIsImV4cCI6bnVsbCwicHVyIjoidmFyaWF0aW9uIn19--9e128501e524113b1b4ea340c68c866d01ea19dd/chica-bonita-tocandose-cara_1153-1023.jpg",
+                        "type": "user",
+                        "availability_status": "online",
+                        "thumbnail": "http://localhost:3000/rails/active_storage/representations/redirect/eyJfcmFpbHMiOnsibWVzc2FnZSI6IkJBaHBBc3dCIiwiZXhwIjpudWxsLCJwdXIiOiJibG9iX2lkIn19--57fcce6711a1d8dbe3f0028930ce986d8f006382/eyJfcmFpbHMiOnsibWVzc2FnZSI6IkJBaDdCem9MWm05eWJXRjBTU0lJYW5CbkJqb0dSVlE2RTNKbGMybDZaVjkwYjE5bWFXeHNXd2RwQWZvdyIsImV4cCI6bnVsbCwicHVyIjoidmFyaWF0aW9uIn19--9e128501e524113b1b4ea340c68c866d01ea19dd/chica-bonita-tocandose-cara_1153-1023.jpg"
+                    }
+                },
+                {
+                    "id": 2264,
+                    "content": "*📱 Enviado desde WhatsApp*\n\nesta la pagina de informacion",
+                    "inbox_id": 140,
+                    "conversation_id": 91,
+                    "message_type": 1,
+                    "content_type": "text",
+                    "status": "read",
+                    "content_attributes": {},
+                    "created_at": 1777491007,
+                    "private": true,
+                    "source_id": null,
+                    "sender": {
+                        "id": 3,
+                        "name": "John",
+                        "available_name": "John",
+                        "avatar_url": "http://localhost:3000/rails/active_storage/representations/redirect/eyJfcmFpbHMiOnsibWVzc2FnZSI6IkJBaHBBc3dCIiwiZXhwIjpudWxsLCJwdXIiOiJibG9iX2lkIn19--57fcce6711a1d8dbe3f0028930ce986d8f006382/eyJfcmFpbHMiOnsibWVzc2FnZSI6IkJBaDdCem9MWm05eWJXRjBTU0lJYW5CbkJqb0dSVlE2RTNKbGMybDZaVjkwYjE5bWFXeHNXd2RwQWZvdyIsImV4cCI6bnVsbCwicHVyIjoidmFyaWF0aW9uIn19--9e128501e524113b1b4ea340c68c866d01ea19dd/chica-bonita-tocandose-cara_1153-1023.jpg",
+                        "type": "user",
+                        "availability_status": "online",
+                        "thumbnail": "http://localhost:3000/rails/active_storage/representations/redirect/eyJfcmFpbHMiOnsibWVzc2FnZSI6IkJBaHBBc3dCIiwiZXhwIjpudWxsLCJwdXIiOiJibG9iX2lkIn19--57fcce6711a1d8dbe3f0028930ce986d8f006382/eyJfcmFpbHMiOnsibWVzc2FnZSI6IkJBaDdCem9MWm05eWJXRjBTU0lJYW5CbkJqb0dSVlE2RTNKbGMybDZaVjkwYjE5bWFXeHNXd2RwQWZvdyIsImV4cCI6bnVsbCwicHVyIjoidmFyaWF0aW9uIn19--9e128501e524113b1b4ea340c68c866d01ea19dd/chica-bonita-tocandose-cara_1153-1023.jpg"
+                    }
+                },
+                {
+                    "id": 2265,
+                    "content": "*📱 Enviado desde WhatsApp*\n\nhttps://tulogica.com/",
+                    "inbox_id": 140,
+                    "conversation_id": 91,
+                    "message_type": 1,
+                    "content_type": "text",
+                    "status": "read",
+                    "content_attributes": {},
+                    "created_at": 1777491008,
+                    "private": true,
+                    "source_id": null,
+                    "sender": {
+                        "id": 3,
+                        "name": "John",
+                        "available_name": "John",
+                        "avatar_url": "http://localhost:3000/rails/active_storage/representations/redirect/eyJfcmFpbHMiOnsibWVzc2FnZSI6IkJBaHBBc3dCIiwiZXhwIjpudWxsLCJwdXIiOiJibG9iX2lkIn19--57fcce6711a1d8dbe3f0028930ce986d8f006382/eyJfcmFpbHMiOnsibWVzc2FnZSI6IkJBaDdCem9MWm05eWJXRjBTU0lJYW5CbkJqb0dSVlE2RTNKbGMybDZaVjkwYjE5bWFXeHNXd2RwQWZvdyIsImV4cCI6bnVsbCwicHVyIjoidmFyaWF0aW9uIn19--9e128501e524113b1b4ea340c68c866d01ea19dd/chica-bonita-tocandose-cara_1153-1023.jpg",
+                        "type": "user",
+                        "availability_status": "online",
+                        "thumbnail": "http://localhost:3000/rails/active_storage/representations/redirect/eyJfcmFpbHMiOnsibWVzc2FnZSI6IkJBaHBBc3dCIiwiZXhwIjpudWxsLCJwdXIiOiJibG9iX2lkIn19--57fcce6711a1d8dbe3f0028930ce986d8f006382/eyJfcmFpbHMiOnsibWVzc2FnZSI6IkJBaDdCem9MWm05eWJXRjBTU0lJYW5CbkJqb0dSVlE2RTNKbGMybDZaVjkwYjE5bWFXeHNXd2RwQWZvdyIsImV4cCI6bnVsbCwicHVyIjoidmFyaWF0aW9uIn19--9e128501e524113b1b4ea340c68c866d01ea19dd/chica-bonita-tocandose-cara_1153-1023.jpg"
+                    }
+                },
+                {
+                    "id": 2271,
+                    "content": "Pucha no cre",
+                    "inbox_id": 140,
+                    "conversation_id": 91,
+                    "message_type": 0,
+                    "content_type": "text",
+                    "status": "sent",
+                    "content_attributes": {},
+                    "created_at": 1777491568,
+                    "private": false,
+                    "source_id": null,
+                    "sender": {
+                        "additional_attributes": {
+                            "city": "",
+                            "country": "",
+                            "description": "",
+                            "company_name": "",
+                            "country_code": "",
+                            "avatar_url_hash": "64587ccbb9e6dc6423e7ede80354cacf2d5a5fb33424b08724e9f03299655fb4",
+                            "social_profiles": {
+                                "github": "",
+                                "tiktok": "",
+                                "twitter": "",
+                                "facebook": "",
+                                "linkedin": "",
+                                "telegram": "",
+                                "instagram": ""
+                            },
+                            "last_avatar_sync_at": "2026-04-29T18:10:22Z"
+                        },
+                        "custom_attributes": {
+                            "waha_whatsapp_jid": "59170714778@c.us",
+                            "waha_whatsapp_lid": "209916627255428@lid",
+                            "waha_whatsapp_chat_id": "209916627255428@lid"
+                        },
+                        "email": null,
+                        "id": 227,
+                        "identifier": null,
+                        "name": "✨ Melissa.. bella",
+                        "phone_number": "+59170714778",
+                        "thumbnail": "http://localhost:3000/rails/active_storage/representations/redirect/eyJfcmFpbHMiOnsibWVzc2FnZSI6IkJBaHBBaFVDIiwiZXhwIjpudWxsLCJwdXIiOiJibG9iX2lkIn19--aac84a58adc8ab927508299e53eb4698e2f3b06e/eyJfcmFpbHMiOnsibWVzc2FnZSI6IkJBaDdCem9MWm05eWJXRjBTU0lJYW5CbkJqb0dSVlE2RTNKbGMybDZaVjkwYjE5bWFXeHNXd2RwQWZvdyIsImV4cCI6bnVsbCwicHVyIjoidmFyaWF0aW9uIn19--9e128501e524113b1b4ea340c68c866d01ea19dd/file.enc",
+                        "blocked": false,
+                        "type": "contact"
+                    }
+                },
+                {
+                    "id": 2272,
+                    "content": "Creo",
+                    "inbox_id": 140,
+                    "conversation_id": 91,
+                    "message_type": 0,
+                    "content_type": "text",
+                    "status": "sent",
+                    "content_attributes": {},
+                    "created_at": 1777491569,
+                    "private": false,
+                    "source_id": null,
+                    "sender": {
+                        "additional_attributes": {
+                            "city": "",
+                            "country": "",
+                            "description": "",
+                            "company_name": "",
+                            "country_code": "",
+                            "avatar_url_hash": "64587ccbb9e6dc6423e7ede80354cacf2d5a5fb33424b08724e9f03299655fb4",
+                            "social_profiles": {
+                                "github": "",
+                                "tiktok": "",
+                                "twitter": "",
+                                "facebook": "",
+                                "linkedin": "",
+                                "telegram": "",
+                                "instagram": ""
+                            },
+                            "last_avatar_sync_at": "2026-04-29T18:10:22Z"
+                        },
+                        "custom_attributes": {
+                            "waha_whatsapp_jid": "59170714778@c.us",
+                            "waha_whatsapp_lid": "209916627255428@lid",
+                            "waha_whatsapp_chat_id": "209916627255428@lid"
+                        },
+                        "email": null,
+                        "id": 227,
+                        "identifier": null,
+                        "name": "✨ Melissa.. bella",
+                        "phone_number": "+59170714778",
+                        "thumbnail": "http://localhost:3000/rails/active_storage/representations/redirect/eyJfcmFpbHMiOnsibWVzc2FnZSI6IkJBaHBBaFVDIiwiZXhwIjpudWxsLCJwdXIiOiJibG9iX2lkIn19--aac84a58adc8ab927508299e53eb4698e2f3b06e/eyJfcmFpbHMiOnsibWVzc2FnZSI6IkJBaDdCem9MWm05eWJXRjBTU0lJYW5CbkJqb0dSVlE2RTNKbGMybDZaVjkwYjE5bWFXeHNXd2RwQWZvdyIsImV4cCI6bnVsbCwicHVyIjoidmFyaWF0aW9uIn19--9e128501e524113b1b4ea340c68c866d01ea19dd/file.enc",
+                        "blocked": false,
+                        "type": "contact"
+                    }
+                },
+                {
+                    "id": 2273,
+                    "content": "Les mandaré a mis jefas",
+                    "inbox_id": 140,
+                    "conversation_id": 91,
+                    "message_type": 0,
+                    "content_type": "text",
+                    "status": "sent",
+                    "content_attributes": {},
+                    "created_at": 1777491577,
+                    "private": false,
+                    "source_id": null,
+                    "sender": {
+                        "additional_attributes": {
+                            "city": "",
+                            "country": "",
+                            "description": "",
+                            "company_name": "",
+                            "country_code": "",
+                            "avatar_url_hash": "64587ccbb9e6dc6423e7ede80354cacf2d5a5fb33424b08724e9f03299655fb4",
+                            "social_profiles": {
+                                "github": "",
+                                "tiktok": "",
+                                "twitter": "",
+                                "facebook": "",
+                                "linkedin": "",
+                                "telegram": "",
+                                "instagram": ""
+                            },
+                            "last_avatar_sync_at": "2026-04-29T18:10:22Z"
+                        },
+                        "custom_attributes": {
+                            "waha_whatsapp_jid": "59170714778@c.us",
+                            "waha_whatsapp_lid": "209916627255428@lid",
+                            "waha_whatsapp_chat_id": "209916627255428@lid"
+                        },
+                        "email": null,
+                        "id": 227,
+                        "identifier": null,
+                        "name": "✨ Melissa.. bella",
+                        "phone_number": "+59170714778",
+                        "thumbnail": "http://localhost:3000/rails/active_storage/representations/redirect/eyJfcmFpbHMiOnsibWVzc2FnZSI6IkJBaHBBaFVDIiwiZXhwIjpudWxsLCJwdXIiOiJibG9iX2lkIn19--aac84a58adc8ab927508299e53eb4698e2f3b06e/eyJfcmFpbHMiOnsibWVzc2FnZSI6IkJBaDdCem9MWm05eWJXRjBTU0lJYW5CbkJqb0dSVlE2RTNKbGMybDZaVjkwYjE5bWFXeHNXd2RwQWZvdyIsImV4cCI6bnVsbCwicHVyIjoidmFyaWF0aW9uIn19--9e128501e524113b1b4ea340c68c866d01ea19dd/file.enc",
+                        "blocked": false,
+                        "type": "contact"
+                    }
+                },
+                {
+                    "id": 2275,
+                    "content": "*📱 Enviado desde WhatsApp*\n\noki.. pero tranki, como te decia te doy el tiempo que quieras probarlo..",
+                    "inbox_id": 140,
+                    "conversation_id": 91,
+                    "message_type": 1,
+                    "content_type": "text",
+                    "status": "read",
+                    "content_attributes": {},
+                    "created_at": 1777491656,
+                    "private": true,
+                    "source_id": null,
+                    "sender": {
+                        "id": 3,
+                        "name": "John",
+                        "available_name": "John",
+                        "avatar_url": "http://localhost:3000/rails/active_storage/representations/redirect/eyJfcmFpbHMiOnsibWVzc2FnZSI6IkJBaHBBc3dCIiwiZXhwIjpudWxsLCJwdXIiOiJibG9iX2lkIn19--57fcce6711a1d8dbe3f0028930ce986d8f006382/eyJfcmFpbHMiOnsibWVzc2FnZSI6IkJBaDdCem9MWm05eWJXRjBTU0lJYW5CbkJqb0dSVlE2RTNKbGMybDZaVjkwYjE5bWFXeHNXd2RwQWZvdyIsImV4cCI6bnVsbCwicHVyIjoidmFyaWF0aW9uIn19--9e128501e524113b1b4ea340c68c866d01ea19dd/chica-bonita-tocandose-cara_1153-1023.jpg",
+                        "type": "user",
+                        "availability_status": "online",
+                        "thumbnail": "http://localhost:3000/rails/active_storage/representations/redirect/eyJfcmFpbHMiOnsibWVzc2FnZSI6IkJBaHBBc3dCIiwiZXhwIjpudWxsLCJwdXIiOiJibG9iX2lkIn19--57fcce6711a1d8dbe3f0028930ce986d8f006382/eyJfcmFpbHMiOnsibWVzc2FnZSI6IkJBaDdCem9MWm05eWJXRjBTU0lJYW5CbkJqb0dSVlE2RTNKbGMybDZaVjkwYjE5bWFXeHNXd2RwQWZvdyIsImV4cCI6bnVsbCwicHVyIjoidmFyaWF0aW9uIn19--9e128501e524113b1b4ea340c68c866d01ea19dd/chica-bonita-tocandose-cara_1153-1023.jpg"
+                    }
+                },
+                {
+                    "id": 2278,
+                    "content": "Nose tampoco entiendo jjaja",
+                    "inbox_id": 140,
+                    "conversation_id": 91,
+                    "message_type": 0,
+                    "content_type": "text",
+                    "status": "sent",
+                    "content_attributes": {},
+                    "created_at": 1777491858,
+                    "private": false,
+                    "source_id": null,
+                    "sender": {
+                        "additional_attributes": {
+                            "city": "",
+                            "country": "",
+                            "description": "",
+                            "company_name": "",
+                            "country_code": "",
+                            "avatar_url_hash": "64587ccbb9e6dc6423e7ede80354cacf2d5a5fb33424b08724e9f03299655fb4",
+                            "social_profiles": {
+                                "github": "",
+                                "tiktok": "",
+                                "twitter": "",
+                                "facebook": "",
+                                "linkedin": "",
+                                "telegram": "",
+                                "instagram": ""
+                            },
+                            "last_avatar_sync_at": "2026-04-29T18:10:22Z"
+                        },
+                        "custom_attributes": {
+                            "waha_whatsapp_jid": "59170714778@c.us",
+                            "waha_whatsapp_lid": "209916627255428@lid",
+                            "waha_whatsapp_chat_id": "209916627255428@lid"
+                        },
+                        "email": null,
+                        "id": 227,
+                        "identifier": null,
+                        "name": "✨ Melissa.. bella",
+                        "phone_number": "+59170714778",
+                        "thumbnail": "http://localhost:3000/rails/active_storage/representations/redirect/eyJfcmFpbHMiOnsibWVzc2FnZSI6IkJBaHBBaFVDIiwiZXhwIjpudWxsLCJwdXIiOiJibG9iX2lkIn19--aac84a58adc8ab927508299e53eb4698e2f3b06e/eyJfcmFpbHMiOnsibWVzc2FnZSI6IkJBaDdCem9MWm05eWJXRjBTU0lJYW5CbkJqb0dSVlE2RTNKbGMybDZaVjkwYjE5bWFXeHNXd2RwQWZvdyIsImV4cCI6bnVsbCwicHVyIjoidmFyaWF0aW9uIn19--9e128501e524113b1b4ea340c68c866d01ea19dd/file.enc",
+                        "blocked": false,
+                        "type": "contact"
+                    }
+                },
+                {
+                    "id": 2282,
+                    "content": "*📱 Enviado desde WhatsApp*\n\nJaja. poco a poco  para mejorar la productividad.",
+                    "account_id": 4,
+                    "inbox_id": 140,
+                    "conversation_id": 91,
+                    "message_type": 1,
+                    "created_at": 1777492267,
+                    "updated_at": "2026-04-29T19:56:52.330Z",
+                    "private": true,
+                    "status": "read",
+                    "source_id": null,
+                    "content_type": "text",
+                    "content_attributes": {},
+                    "sender_type": "User",
+                    "sender_id": 3,
+                    "external_source_ids": {},
+                    "additional_attributes": {},
+                    "processed_message_content": "*📱 Enviado desde WhatsApp*\n\nJaja. poco a poco  para mejorar la productividad.",
+                    "sentiment": {},
+                    "conversation": {
+                        "assignee_id": 3,
+                        "unread_count": 0,
+                        "last_activity_at": 1777492267,
+                        "contact_inbox": {
+                            "source_id": "0c462e5d-7cb9-44b1-9d5f-e25840081950"
+                        }
+                    },
+                    "sender": {
+                        "id": 3,
+                        "name": "John",
+                        "available_name": "John",
+                        "avatar_url": "http://localhost:3000/rails/active_storage/representations/redirect/eyJfcmFpbHMiOnsibWVzc2FnZSI6IkJBaHBBc3dCIiwiZXhwIjpudWxsLCJwdXIiOiJibG9iX2lkIn19--57fcce6711a1d8dbe3f0028930ce986d8f006382/eyJfcmFpbHMiOnsibWVzc2FnZSI6IkJBaDdCem9MWm05eWJXRjBTU0lJYW5CbkJqb0dSVlE2RTNKbGMybDZaVjkwYjE5bWFXeHNXd2RwQWZvdyIsImV4cCI6bnVsbCwicHVyIjoidmFyaWF0aW9uIn19--9e128501e524113b1b4ea340c68c866d01ea19dd/chica-bonita-tocandose-cara_1153-1023.jpg",
+                        "type": "user",
+                        "availability_status": "online",
+                        "thumbnail": "http://localhost:3000/rails/active_storage/representations/redirect/eyJfcmFpbHMiOnsibWVzc2FnZSI6IkJBaHBBc3dCIiwiZXhwIjpudWxsLCJwdXIiOiJibG9iX2lkIn19--57fcce6711a1d8dbe3f0028930ce986d8f006382/eyJfcmFpbHMiOnsibWVzc2FnZSI6IkJBaDdCem9MWm05eWJXRjBTU0lJYW5CbkJqb0dSVlE2RTNKbGMybDZaVjkwYjE5bWFXeHNXd2RwQWZvdyIsImV4cCI6bnVsbCwicHVyIjoidmFyaWF0aW9uIn19--9e128501e524113b1b4ea340c68c866d01ea19dd/chica-bonita-tocandose-cara_1153-1023.jpg"
+                    }
+                }
+            ],
+            "account_id": 4,
+            "uuid": "ac8eb5e2-557b-4dc5-8d58-10a3407e8238",
+            "additional_attributes": {},
+            "agent_last_seen_at": 1777566053,
+            "assignee_last_seen_at": 1777530388,
+            "can_reply": true,
+            "contact_last_seen_at": 1777492612,
+            "custom_attributes": {},
+            "inbox_id": 140,
+            "labels": [],
+            "muted": false,
+            "snoozed_until": null,
+            "status": "open",
+            "created_at": 1777486223,
+            "updated_at": 1777492612.260572,
+            "timestamp": 1777492267,
+            "first_reply_created_at": 1777486462,
+            "unread_count": 0,
+            "last_non_activity_message": {
+                "id": 2282,
+                "content": "*📱 Enviado desde WhatsApp*\n\nJaja. poco a poco  para mejorar la productividad.",
+                "account_id": 4,
+                "inbox_id": 140,
+                "conversation_id": 91,
+                "message_type": 1,
+                "created_at": 1777492267,
+                "updated_at": "2026-04-29T19:56:52.330Z",
+                "private": true,
+                "status": "read",
+                "source_id": null,
+                "content_type": "text",
+                "content_attributes": {},
+                "sender_type": "User",
+                "sender_id": 3,
+                "external_source_ids": {},
+                "additional_attributes": {},
+                "processed_message_content": "*📱 Enviado desde WhatsApp*\n\nJaja. poco a poco  para mejorar la productividad.",
+                "sentiment": {},
+                "conversation": {
+                    "assignee_id": 3,
+                    "unread_count": 0,
+                    "last_activity_at": 1777492267,
+                    "contact_inbox": {
+                        "source_id": "0c462e5d-7cb9-44b1-9d5f-e25840081950"
+                    }
+                },
+                "sender": {
+                    "id": 3,
+                    "name": "John",
+                    "available_name": "John",
+                    "avatar_url": "http://localhost:3000/rails/active_storage/representations/redirect/eyJfcmFpbHMiOnsibWVzc2FnZSI6IkJBaHBBc3dCIiwiZXhwIjpudWxsLCJwdXIiOiJibG9iX2lkIn19--57fcce6711a1d8dbe3f0028930ce986d8f006382/eyJfcmFpbHMiOnsibWVzc2FnZSI6IkJBaDdCem9MWm05eWJXRjBTU0lJYW5CbkJqb0dSVlE2RTNKbGMybDZaVjkwYjE5bWFXeHNXd2RwQWZvdyIsImV4cCI6bnVsbCwicHVyIjoidmFyaWF0aW9uIn19--9e128501e524113b1b4ea340c68c866d01ea19dd/chica-bonita-tocandose-cara_1153-1023.jpg",
+                    "type": "user",
+                    "availability_status": "online",
+                    "thumbnail": "http://localhost:3000/rails/active_storage/representations/redirect/eyJfcmFpbHMiOnsibWVzc2FnZSI6IkJBaHBBc3dCIiwiZXhwIjpudWxsLCJwdXIiOiJibG9iX2lkIn19--57fcce6711a1d8dbe3f0028930ce986d8f006382/eyJfcmFpbHMiOnsibWVzc2FnZSI6IkJBaDdCem9MWm05eWJXRjBTU0lJYW5CbkJqb0dSVlE2RTNKbGMybDZaVjkwYjE5bWFXeHNXd2RwQWZvdyIsImV4cCI6bnVsbCwicHVyIjoidmFyaWF0aW9uIn19--9e128501e524113b1b4ea340c68c866d01ea19dd/chica-bonita-tocandose-cara_1153-1023.jpg"
+                }
+            },
+            "last_activity_at": 1777492267,
+            "priority": null,
+            "waiting_since": 1777491568,
+            "sla_policy_id": null,
+            "allMessagesLoaded": false,
+            "dataFetched": true
+        },
+        "contact": {
+            "additional_attributes": {
+                "city": "",
+                "country": "",
+                "description": "",
+                "company_name": "",
+                "country_code": "",
+                "avatar_url_hash": "64587ccbb9e6dc6423e7ede80354cacf2d5a5fb33424b08724e9f03299655fb4",
+                "social_profiles": {
+                    "github": "",
+                    "tiktok": "",
+                    "twitter": "",
+                    "facebook": "",
+                    "linkedin": "",
+                    "telegram": "",
+                    "instagram": ""
+                },
+                "last_avatar_sync_at": "2026-04-29T18:10:22Z"
+            },
+            "availability_status": null,
+            "email": null,
+            "id": 227,
+            "name": "✨ Melissa.. ",
+            "phone_number": "+59170714778",
+            "blocked": false,
+            "identifier": null,
+            "thumbnail": "http://localhost:3000/rails/active_storage/representations/redirect/eyJfcmFpbHMiOnsibWVzc2FnZSI6IkJBaHBBaFVDIiwiZXhwIjpudWxsLCJwdXIiOiJibG9iX2lkIn19--aac84a58adc8ab927508299e53eb4698e2f3b06e/eyJfcmFpbHMiOnsibWVzc2FnZSI6IkJBaDdCem9MWm05eWJXRjBTU0lJYW5CbkJqb0dSVlE2RTNKbGMybDZaVjkwYjE5bWFXeHNXd2RwQWZvdyIsImV4cCI6bnVsbCwicHVyIjoidmFyaWF0aW9uIn19--9e128501e524113b1b4ea340c68c866d01ea19dd/file.enc",
+            "custom_attributes": {
+                "waha_whatsapp_jid": "59170714778@c.us",
+                "waha_whatsapp_lid": "209916627255428@lid",
+                "waha_whatsapp_chat_id": "209916627255428@lid"
+            },
+            "last_activity_at": 1777491858,
+            "created_at": 1777482425,
+            "contact_inboxes": [
+                {
+                    "inbox": {
+                        "id": 140,
+                        "avatar_url": "",
+                        "channel_id": 134,
+                        "name": "WhatsApp TS",
+                        "channel_type": "Channel::Api",
+                        "provider": null
+                    },
+                    "source_id": "ac99aadd-29f6-49d2-8d50-730c4b530287"
+                },
+                {
+                    "inbox": {
+                        "id": 143,
+                        "avatar_url": "",
+                        "channel_id": 136,
+                        "name": "WhatsApp NUEVO",
+                        "channel_type": "Channel::Api",
+                        "provider": null
+                    },
+                    "source_id": "75971324-6739-4675-9d21-24a7dea25f34"
+                }
+            ],
+            "type": "contact",
+            "account_id": 4,
+            "performer": {
+                "id": 3,
+                "name": "John",
+                "available_name": "John",
+                "avatar_url": "http://localhost:3000/rails/active_storage/representations/redirect/eyJfcmFpbHMiOnsibWVzc2FnZSI6IkJBaHBBc3dCIiwiZXhwIjpudWxsLCJwdXIiOiJibG9iX2lkIn19--57fcce6711a1d8dbe3f0028930ce986d8f006382/eyJfcmFpbHMiOnsibWVzc2FnZSI6IkJBaDdCem9MWm05eWJXRjBTU0lJYW5CbkJqb0dSVlE2RTNKbGMybDZaVjkwYjE5bWFXeHNXd2RwQWZvdyIsImV4cCI6bnVsbCwicHVyIjoidmFyaWF0aW9uIn19--9e128501e524113b1b4ea340c68c866d01ea19dd/chica-bonita-tocandose-cara_1153-1023.jpg",
+                "type": "user",
+                "availability_status": "online",
+                "thumbnail": "http://localhost:3000/rails/active_storage/representations/redirect/eyJfcmFpbHMiOnsibWVzc2FnZSI6IkJBaHBBc3dCIiwiZXhwIjpudWxsLCJwdXIiOiJibG9iX2lkIn19--57fcce6711a1d8dbe3f0028930ce986d8f006382/eyJfcmFpbHMiOnsibWVzc2FnZSI6IkJBaDdCem9MWm05eWJXRjBTU0lJYW5CbkJqb0dSVlE2RTNKbGMybDZaVjkwYjE5bWFXeHNXd2RwQWZvdyIsImV4cCI6bnVsbCwicHVyIjoidmFyaWF0aW9uIn19--9e128501e524113b1b4ea340c68c866d01ea19dd/chica-bonita-tocandose-cara_1153-1023.jpg"
+            }
+        },
+        "currentAgent": {
+            "id": 3,
+            "name": "John",
+            "email": "john@acme.inc"
+        }
+    }
+
+}

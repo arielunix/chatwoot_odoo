@@ -1,0 +1,679 @@
+import { useEffect, useState } from "react";
+
+const API_URL = "http://localhost:3001";
+
+export default function PanelApp() {
+  const [data, setData] = useState(null);
+  const [rawEvents, setRawEvents] = useState([]);
+  
+  // Estado para navegación de módulos
+  const [activeModule, setActiveModule] = useState("contacto");
+  
+  // Estado para Odoo
+  const [odooCustomer, setOdooCustomer] = useState(null);
+  const [odooLoading, setOdooLoading] = useState(false);
+  const [odooError, setOdooError] = useState(null);
+  const [creatingCustomer, setCreatingCustomer] = useState(false);
+  
+  // Estado para Ventas (products y quote)
+  const [products, setProducts] = useState([]);
+  const [productsLoading, setProductsLoading] = useState(false);
+  const [selectedProducts, setSelectedProducts] = useState([]);
+  const [creatingQuote, setCreatingQuote] = useState(false);
+  const [quoteCreated, setQuoteCreated] = useState(null);
+
+  // Función para buscar cliente en Odoo
+  const searchOdooCustomer = async (phone, email) => {
+    setOdooLoading(true);
+    setOdooError(null);
+    
+    // Crear clave única basada en teléfono o email
+    const contactKey = phone || email;
+    const storageKey = `odooCustomer_${contactKey}`;
+    
+    // Verificar si ya tenemos datos guardados para este contacto
+    const savedCustomer = localStorage.getItem(storageKey);
+    if (savedCustomer) {
+      try {
+        const parsed = JSON.parse(savedCustomer);
+        setOdooCustomer(parsed);
+        setOdooLoading(false);
+        return;
+      } catch (e) {
+        localStorage.removeItem(storageKey);
+      }
+    }
+    
+    try {
+      const response = await fetch(`${API_URL}/odoo/search-customer`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ phone, email }),
+      });
+      
+      const result = await response.json();
+      
+      if (result.found) {
+        setOdooCustomer(result.customer);
+        localStorage.setItem(storageKey, JSON.stringify(result.customer));
+      } else {
+        setOdooCustomer(null);
+      }
+    } catch (err) {
+      setOdooError(err.message);
+    } finally {
+      setOdooLoading(false);
+    }
+  };
+
+  // Función para crear cliente en Odoo
+  const createOdooCustomer = async (name, phone, email) => {
+    setCreatingCustomer(true);
+    setOdooError(null);
+    
+    const contactKey = phone || email;
+    const storageKey = `odooCustomer_${contactKey}`;
+    
+    try {
+      const response = await fetch(`${API_URL}/odoo/create-customer`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ name, phone, email }),
+      });
+      
+      const result = await response.json();
+      
+      if (result.success) {
+        setOdooCustomer(result.customer);
+        localStorage.setItem(storageKey, JSON.stringify(result.customer));
+        return true;
+      }
+    } catch (err) {
+      setOdooError(err.message);
+    } finally {
+      setCreatingCustomer(false);
+    }
+    return false;
+  };
+
+  // Función para cargar productos desde Odoo
+  const loadProducts = async () => {
+    setProductsLoading(true);
+    try {
+      const response = await fetch(`${API_URL}/odoo/products`);
+      const result = await response.json();
+      if (result.success) {
+        setProducts(result.products || []);
+      }
+    } catch (err) {
+      console.error("Error cargando productos:", err);
+    } finally {
+      setProductsLoading(false);
+    }
+  };
+
+  // Función para crear presupuesto
+  const createQuote = async () => {
+    if (!odooCustomer?.id) {
+      alert("⚠️ Necesitas un cliente de Odoo primero");
+      return;
+    }
+    
+    if (selectedProducts.length === 0) {
+      alert("⚠️ Selecciona al menos un producto");
+      return;
+    }
+
+    setCreatingQuote(true);
+    try {
+      const order_lines = selectedProducts.map(p => ({
+        product_id: p.id,
+        qty: p.qty || 1,
+        price: p.price
+      }));
+
+      const response = await fetch(`${API_URL}/odoo/quote`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          partner_id: odooCustomer.id,
+          order_lines
+        }),
+      });
+
+      const result = await response.json();
+      
+      if (result.success) {
+        setQuoteCreated(result.id);
+        setSelectedProducts([]);
+      }
+    } catch (err) {
+      console.error("Error creando presupuesto:", err);
+    } finally {
+      setCreatingQuote(false);
+    }
+  };
+
+  // Agregar producto a la selección
+  const addProductToQuote = (product) => {
+    const existing = selectedProducts.find(p => p.id === product.id);
+    if (existing) {
+      setSelectedProducts(selectedProducts.map(p => 
+        p.id === product.id ? { ...p, qty: p.qty + 1 } : p
+      ));
+    } else {
+      setSelectedProducts([...selectedProducts, { ...product, qty: 1 }]);
+    }
+  };
+
+  // Quitar producto de la selección
+  const removeProductFromQuote = (productId) => {
+    setSelectedProducts(selectedProducts.filter(p => p.id !== productId));
+  };
+
+  useEffect(() => {
+    const handler = (event) => {
+      // ⚠️ IMPORTANTE: puedes restringir dominio luego
+      // if (event.origin !== "https://tu-chatwoot.com") return;
+
+      console.log("📩 Evento recibido:", event);
+
+      // Parsear si viene como string JSON
+      let parsedData = event.data;
+      if (typeof event.data === "string") {
+        try {
+          parsedData = JSON.parse(event.data);
+          console.log("✅ JSON parseado:", parsedData);
+        } catch (e) {
+          console.error("❌ Error al parsear JSON:", e);
+        }
+      }
+
+      // Imprimir datos recibidos de forma detallada
+      if (parsedData?.data) {
+        const conversationData = parsedData.data.conversation;
+        const contactData = parsedData.data.contact || conversationData?.meta?.sender;
+        
+        console.log("📋 Datos del contacto:", {
+          nombre: contactData?.name,
+          email: contactData?.email,
+          telefono: contactData?.phone_number,
+        });
+        console.log("💬 Datos de conversación:", {
+          id: conversationData?.id,
+          estado: conversationData?.status,
+        });
+        console.log("📦 Data completa:", parsedData);
+      }
+
+      // Guardar todos los eventos para debug
+      setRawEvents((prev) => [
+        {
+          timestamp: new Date().toISOString(),
+          origin: event.origin,
+          data: parsedData,
+        },
+        ...prev,
+      ]);
+
+      // Solo setear si tiene estructura útil
+      if (parsedData) {
+        setData(parsedData);
+        
+        // Buscar cliente en Odoo cuando lleguen datos del contacto
+        const contact = parsedData?.data?.contact || parsedData?.data?.conversation?.meta?.sender;
+        if (contact) {
+          searchOdooCustomer(contact.phone_number, contact.email);
+        }
+      }
+    };
+
+    window.addEventListener("message", handler);
+
+    return () => {
+      window.removeEventListener("message", handler);
+    };
+  }, []);
+
+  // Extraer datos correctamente de la estructura anidada
+  const conversationData = data?.data?.conversation;
+  const contactData = data?.data?.contact || conversationData?.meta?.sender;
+  const currentAgent = data?.data?.currentAgent;
+  const messages = conversationData?.messages || [];
+  const labels = conversationData?.labels || [];
+
+  return (
+    <div style={{ 
+      padding: 20, 
+      fontFamily: "'Segoe UI', Tahoma, Geneva, Verdana, sans-serif",
+      background: "#f8f9fa",
+      minHeight: "100vh"
+    }}>
+      <h2 style={{ color: "#2c3e50", borderBottom: "2px solid #3498db", paddingBottom: 10 }}>
+        💬 Chatwoot App Panel
+      </h2>
+
+      {/* � Navegación de módulos */}
+      <div style={{ 
+        display: "flex", 
+        gap: 10, 
+        marginBottom: 20,
+        borderBottom: "2px solid #e9ecef",
+        paddingBottom: 10
+      }}>
+        <button
+          onClick={() => setActiveModule("contacto")}
+          style={{
+            background: activeModule === "contacto" ? "#3498db" : "#e9ecef",
+            color: activeModule === "contacto" ? "white" : "#495057",
+            border: "none",
+            padding: "10px 20px",
+            borderRadius: 8,
+            fontSize: 14,
+            fontWeight: "bold",
+            cursor: "pointer"
+          }}
+        >
+          👤 Contacto
+        </button>
+        <button
+          onClick={() => {
+            setActiveModule("ventas");
+            if (products.length === 0) loadProducts();
+          }}
+          style={{
+            background: activeModule === "ventas" ? "#3498db" : "#e9ecef",
+            color: activeModule === "ventas" ? "white" : "#495057",
+            border: "none",
+            padding: "10px 20px",
+            borderRadius: 8,
+            fontSize: 14,
+            fontWeight: "bold",
+            cursor: "pointer"
+          }}
+        >
+          💰 Ventas
+        </button>
+      </div>
+
+      {/* 📱 Contenido según módulo activo */}
+      {activeModule === "contacto" && (
+      <>
+      {/* �🟢 Datos del contacto */}
+      <div style={{ 
+        marginBottom: 20, 
+        background: "white", 
+        borderRadius: 10,
+        boxShadow: "0 2px 8px rgba(0,0,0,0.1)",
+        overflow: "hidden"
+      }}>
+        <div style={{ 
+          background: "linear-gradient(135deg, #667eea 0%, #764ba2 100%)", 
+          color: "white", 
+          padding: "15px 20px",
+          fontWeight: "bold",
+          fontSize: 16
+        }}>
+          👤 Datos del Contacto
+        </div>
+        <div style={{ padding: 20 }}>
+          {contactData ? (
+            <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(200px, 1fr))", gap: 15 }}>
+              <div style={{ background: "#f8f9fa", padding: 12, borderRadius: 8 }}>
+                <div style={{ color: "#6c757d", fontSize: 12, marginBottom: 4 }}>Nombre</div>
+                <div style={{ fontWeight: "bold", fontSize: 16 }}>{contactData.name || "-"}</div>
+              </div>
+              <div style={{ background: "#f8f9fa", padding: 12, borderRadius: 8 }}>
+                <div style={{ color: "#6c757d", fontSize: 12, marginBottom: 4 }}>Teléfono</div>
+                <div style={{ fontWeight: "bold", fontSize: 16 }}>{contactData.phone_number || "-"}</div>
+              </div>
+              <div style={{ background: "#f8f9fa", padding: 12, borderRadius: 8 }}>
+                <div style={{ color: "#6c757d", fontSize: 12, marginBottom: 4 }}>Email</div>
+                <div style={{ fontWeight: "bold", fontSize: 16 }}>{contactData.email || "-"}</div>
+              </div>
+              <div style={{ background: "#f8f9fa", padding: 12, borderRadius: 8 }}>
+                <div style={{ color: "#6c757d", fontSize: 12, marginBottom: 4 }}>ID Contacto</div>
+                <div style={{ fontWeight: "bold", fontSize: 16 }}>{contactData.id || "-"}</div>
+              </div>
+            </div>
+          ) : (
+            <p style={{ color: "#6c757d" }}>Esperando datos del contacto...</p>
+          )}
+        </div>
+      </div>
+
+      {/* 🏢 Estado Odoo */}
+      <div style={{ 
+        marginBottom: 20, 
+        background: "white", 
+        borderRadius: 10,
+        boxShadow: "0 2px 8px rgba(0,0,0,0.1)",
+        overflow: "hidden"
+      }}>
+        <div style={{ 
+          background: "linear-gradient(135deg, #f5af19 0%, #f12711 100%)", 
+          color: "white", 
+          padding: "15px 20px",
+          fontWeight: "bold",
+          fontSize: 16
+        }}>
+          🏢 Estado Odoo
+        </div>
+        <div style={{ padding: 20 }}>
+          {odooLoading ? (
+            <p style={{ color: "#6c757d" }}>🔍 Buscando en Odoo...</p>
+          ) : odooError ? (
+            <div style={{ color: "#dc3545", background: "#f8d7da", padding: 10, borderRadius: 8 }}>
+              ❌ Error: {odooError}
+            </div>
+          ) : odooCustomer ? (
+            <div>
+              <div style={{ 
+                background: "#d4edda", 
+                color: "#155724", 
+                padding: "10px 15px", 
+                borderRadius: 8,
+                marginBottom: 15,
+                display: "flex",
+                alignItems: "center",
+                gap: 10
+              }}>
+                <span style={{ fontSize: 24 }}>✅</span>
+                <div>
+                  <strong>Cliente encontrado en Odoo</strong>
+                  <div style={{ fontSize: 14 }}>ID: {odooCustomer.id}</div>
+                </div>
+              </div>
+              <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(150px, 1fr))", gap: 15 }}>
+                <div style={{ background: "#f8f9fa", padding: 12, borderRadius: 8 }}>
+                  <div style={{ color: "#6c757d", fontSize: 12, marginBottom: 4 }}>Nombre</div>
+                  <div style={{ fontWeight: "bold", fontSize: 16 }}>{odooCustomer.name}</div>
+                </div>
+                <div style={{ background: "#f8f9fa", padding: 12, borderRadius: 8 }}>
+                  <div style={{ color: "#6c757d", fontSize: 12, marginBottom: 4 }}>Teléfono</div>
+                  <div style={{ fontWeight: "bold", fontSize: 16 }}>{odooCustomer.phone || "-"}</div>
+                </div>
+                <div style={{ background: "#f8f9fa", padding: 12, borderRadius: 8 }}>
+                  <div style={{ color: "#6c757d", fontSize: 12, marginBottom: 4 }}>Email</div>
+                  <div style={{ fontWeight: "bold", fontSize: 16 }}>{odooCustomer.email || "-"}</div>
+                </div>
+              </div>
+            </div>
+          ) : contactData ? (
+            <div>
+              <div style={{ 
+                background: "#fff3cd", 
+                color: "#856404", 
+                padding: "10px 15px", 
+                borderRadius: 8,
+                marginBottom: 15,
+                display: "flex",
+                alignItems: "center",
+                gap: 10
+              }}>
+                <span style={{ fontSize: 24 }}>⚠️</span>
+                <div>
+                  <strong>Cliente no encontrado en Odoo</strong>
+                  <div style={{ fontSize: 14 }}>¿Deseas crearlo?</div>
+                </div>
+              </div>
+              <button
+                onClick={() => createOdooCustomer(
+                  contactData.name,
+                  contactData.phone_number,
+                  contactData.email
+                )}
+                disabled={creatingCustomer}
+                style={{
+                  background: creatingCustomer ? "#6c757d" : "#28a745",
+                  color: "white",
+                  border: "none",
+                  padding: "12px 24px",
+                  borderRadius: 8,
+                  fontSize: 16,
+                  fontWeight: "bold",
+                  cursor: creatingCustomer ? "not-allowed" : "pointer"
+                }}
+              >
+                {creatingCustomer ? "⏳ Creando..." : "➕ Crear Cliente en Odoo"}
+              </button>
+            </div>
+          ) : (
+            <p style={{ color: "#6c757d" }}>Esperando datos del contacto para buscar en Odoo...</p>
+          )}
+        </div>
+      </div>
+
+      {/* 💬 Datos de la conversación */}
+      <div style={{ 
+        marginBottom: 20, 
+        background: "white", 
+        borderRadius: 10,
+        boxShadow: "0 2px 8px rgba(0,0,0,0.1)",
+        overflow: "hidden"
+      }}>
+        <div style={{ 
+          background: "linear-gradient(135deg, #11998e 0%, #38ef7d 100%)", 
+          color: "white", 
+          padding: "15px 20px",
+          fontWeight: "bold",
+          fontSize: 16
+        }}>
+          💬 Datos de la Conversación
+        </div>
+        <div style={{ padding: 20 }}>
+          {conversationData ? (
+            <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(150px, 1fr))", gap: 15 }}>
+              <div style={{ background: "#f8f9fa", padding: 12, borderRadius: 8 }}>
+                <div style={{ color: "#6c757d", fontSize: 12, marginBottom: 4 }}>ID Conversación</div>
+                <div style={{ fontWeight: "bold", fontSize: 16 }}>{conversationData.id || "-"}</div>
+              </div>
+              <div style={{ background: "#f8f9fa", padding: 12, borderRadius: 8 }}>
+                <div style={{ color: "#6c757d", fontSize: 12, marginBottom: 4 }}>Estado</div>
+                <div style={{ 
+                  fontWeight: "bold", 
+                  fontSize: 16,
+                  color: conversationData.status === "open" ? "#28a745" : "#6c757d"
+                }}>
+                  {conversationData.status?.toUpperCase() || "-"}
+                </div>
+              </div>
+              <div style={{ background: "#f8f9fa", padding: 12, borderRadius: 8 }}>
+                <div style={{ color: "#6c757d", fontSize: 12, marginBottom: 4 }}>Canal</div>
+                <div style={{ fontWeight: "bold", fontSize: 16 }}>{conversationData.channel || "-"}</div>
+              </div>
+              <div style={{ background: "#f8f9fa", padding: 12, borderRadius: 8 }}>
+                <div style={{ color: "#6c757d", fontSize: 12, marginBottom: 4 }}>Mensajes</div>
+                <div style={{ fontWeight: "bold", fontSize: 16 }}>{messages.length}</div>
+              </div>
+            </div>
+          ) : (
+            <p style={{ color: "#6c757d" }}>Esperando datos de conversación...</p>
+          )}
+        </div>
+      </div>
+
+      {/* 👨‍💼 Agente actual */}
+      {currentAgent && (
+        <div style={{ 
+          marginBottom: 20, 
+          background: "white", 
+          borderRadius: 10,
+          boxShadow: "0 2px 8px rgba(0,0,0,0.1)",
+          overflow: "hidden"
+        }}>
+          <div style={{ 
+            background: "linear-gradient(135deg, #f093fb 0%, #f5576c 100%)", 
+            color: "white", 
+            padding: "15px 20px",
+            fontWeight: "bold",
+            fontSize: 16
+          }}>
+            👨‍💼 Agente Asignado
+          </div>
+          <div style={{ padding: 20 }}>
+            <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(200px, 1fr))", gap: 15 }}>
+              <div style={{ background: "#f8f9fa", padding: 12, borderRadius: 8 }}>
+                <div style={{ color: "#6c757d", fontSize: 12, marginBottom: 4 }}>Nombre</div>
+                <div style={{ fontWeight: "bold", fontSize: 16 }}>{currentAgent.name || "-"}</div>
+              </div>
+              <div style={{ background: "#f8f9fa", padding: 12, borderRadius: 8 }}>
+                <div style={{ color: "#6c757d", fontSize: 12, marginBottom: 4 }}>Email</div>
+                <div style={{ fontWeight: "bold", fontSize: 16 }}>{currentAgent.email || "-"}</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* 🏷️ Etiquetas */}
+      {labels.length > 0 && (
+        <div style={{ 
+          marginBottom: 20, 
+          background: "white", 
+          borderRadius: 10,
+          boxShadow: "0 2px 8px rgba(0,0,0,0.1)",
+          overflow: "hidden"
+        }}>
+          <div style={{ 
+            background: "linear-gradient(135deg, #4facfe 0%, #00f2fe 100%)", 
+            color: "white", 
+            padding: "15px 20px",
+            fontWeight: "bold",
+            fontSize: 16
+          }}>
+            🏷️ Etiquetas
+          </div>
+          <div style={{ padding: 20 }}>
+            <div style={{ display: "flex", flexWrap: "wrap", gap: 8 }}>
+              {labels.map((label, i) => (
+                <span key={i} style={{ 
+                  background: "#e9ecef", 
+                  color: "#495057",
+                  padding: "6px 12px", 
+                  borderRadius: 20,
+                  fontSize: 14
+                }}>
+                  {label}
+                </span>
+              ))}
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* 📜 Mensajes recientes */}
+      <div style={{ 
+        marginBottom: 20, 
+        background: "white", 
+        borderRadius: 10,
+        boxShadow: "0 2px 8px rgba(0,0,0,0.1)",
+        overflow: "hidden"
+      }}>
+        <div style={{ 
+          background: "linear-gradient(135deg, #fa709a 0%, #fee140 100%)", 
+          color: "white", 
+          padding: "15px 20px",
+          fontWeight: "bold",
+          fontSize: 16
+        }}>
+          📜 Mensajes ({messages.length})
+        </div>
+        <div style={{ padding: 20, maxHeight: 400, overflow: "auto" }}>
+          {messages.length > 0 ? (
+            messages.slice(0, 10).map((msg) => (
+              <div key={msg.id} style={{ 
+                borderBottom: "1px solid #e9ecef",
+                padding: "12px 0"
+              }}>
+                <div style={{ display: "flex", justifyContent: "space-between", marginBottom: 6 }}>
+                  <span style={{ 
+                    fontWeight: "bold", 
+                    color: msg.message_type === 1 ? "#28a745" : "#007bff"
+                  }}>
+                    {msg.message_type === 1 ? "💬 Agent" : "👤 Cliente"}
+                  </span>
+                  <span style={{ color: "#6c757d", fontSize: 12 }}>
+                    {new Date(msg.created_at * 1000).toLocaleString()}
+                  </span>
+                </div>
+                <div style={{ color: "#495057" }}>
+                  {msg.content || <em style={{ color: "#6c757d" }}>(mensaje sin texto / adjunto)</em>}
+                </div>
+              </div>
+            ))
+          ) : (
+            <p style={{ color: "#6c757d" }}>No hay mensajes</p>
+          )}
+        </div>
+      </div>
+
+      {/* 🧬 JSON completo */}
+      <div style={{ 
+        marginBottom: 20, 
+        background: "white", 
+        borderRadius: 10,
+        boxShadow: "0 2px 8px rgba(0,0,0,0.1)",
+        overflow: "hidden"
+      }}>
+        <div style={{ 
+          background: "#2d3748", 
+          color: "white", 
+          padding: "15px 20px",
+          fontWeight: "bold",
+          fontSize: 16
+        }}>
+          🧬 JSON completo
+        </div>
+        <pre
+          style={{
+            background: "#1a202c",
+            color: "#68d391",
+            padding: 15,
+            overflow: "auto",
+            maxHeight: 300,
+            margin: 0,
+            fontSize: 12
+          }}
+        >
+          {JSON.stringify(data, null, 2)}
+        </pre>
+      </div>
+
+      {/* 📤 Test enviar mensaje a Chatwoot */}
+      <div style={{ 
+        background: "white", 
+        borderRadius: 10,
+        boxShadow: "0 2px 8px rgba(0,0,0,0.1)",
+        padding: 20
+      }}>
+        <h3 style={{ marginTop: 0 }}>📤 Enviar evento a Chatwoot</h3>
+        <button
+          onClick={() => {
+            window.parent.postMessage(
+              {
+                event: "custom_test",
+                payload: { msg: "Hola desde App Panel 🚀" },
+              },
+              "*"
+            );
+          }}
+          style={{
+            background: "linear-gradient(135deg, #667eea 0%, #764ba2 100%)",
+            color: "white",
+            border: "none",
+            padding: "12px 24px",
+            borderRadius: 8,
+            fontSize: 14,
+            cursor: "pointer",
+            fontWeight: "bold"
+          }}
+        >
+          Enviar evento test
+        </button>
+      </div>
+      </>
+      )}
+    </div>
+  );
+}
