@@ -6,6 +6,7 @@ import (
 	"io"
 	"net/http"
 	"odoo-backend/internal/config"
+	"odoo-backend/internal/utils"
 	"strings"
 )
 
@@ -119,8 +120,68 @@ func (s *ReportService) GetQuotePDF(quoteID int) ([]byte, error) {
 
 // GetQuoteReference gets the reference number for a quote
 func (s *ReportService) GetQuoteReference(quoteID int) (string, error) {
-	// For now, return a default format
-	return fmt.Sprintf("S%05d", quoteID), nil
+	// Authenticate to get UID using XML-RPC (which works)
+	uid, err := utils.Authenticate(s.config.OdooURL, s.config.OdooDB, s.config.OdooUser, s.config.OdooPass)
+	if err != nil {
+		return "", err
+	}
+	
+	// Get the quote's name (reference) using XML-RPC
+	xml := fmt.Sprintf(`<?xml version="1.0"?>
+<methodCall>
+  <methodName>execute_kw</methodName>
+  <params>
+    <param><value><string>%s</string></value></param>
+    <param><value><int>%d</int></value></param>
+    <param><value><string>%s</string></value></param>
+    <param><value><string>sale.order</string></value></param>
+    <param><value><string>read</string></value></param>
+    <param>
+      <value>
+        <array>
+          <data>
+            <value><array><data><value><int>%d</int></value></data></array></value>
+          </data>
+        </array>
+      </value>
+    </param>
+    <param>
+      <value>
+        <struct>
+          <member>
+            <name>fields</name>
+            <value>
+              <array>
+                <data>
+                  <value><string>name</string></value>
+                </data>
+              </array>
+            </value>
+          </member>
+        </struct>
+      </value>
+    </param>
+  </params>
+</methodCall>`, s.config.OdooDB, uid, s.config.OdooPass, quoteID)
+	
+	response, err := utils.XMLRPCCall(s.config.OdooURL, "/xmlrpc/2/object", xml)
+	if err != nil {
+		return "", err
+	}
+	
+	// Parse the name field - look for <value><string>NAME</string></value>
+	start := strings.Index(response, "<value><string>")
+	if start == -1 {
+		return "", fmt.Errorf("could not find quote name in response")
+	}
+	start += 17
+	end := strings.Index(response[start:], "</string></value>")
+	if end == -1 {
+		return "", fmt.Errorf("invalid quote name format")
+	}
+	
+	name := response[start : start+end]
+	return name, nil
 }
 
 // GetInvoicePDF generates and retrieves a PDF for an invoice using session authentication

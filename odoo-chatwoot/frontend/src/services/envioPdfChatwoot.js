@@ -305,13 +305,24 @@ export const sendPDFToChatwoot = async (quoteId, conversationId) => {
     throw new Error('Error al obtener PDF de Odoo');
   }
 
+  // Extract filename from Content-Disposition header
+  const contentDisposition = pdfResponse.headers.get('Content-Disposition');
+  let filename = `cotizacion_${quoteId}.pdf`;
+  
+  if (contentDisposition) {
+    const match = contentDisposition.match(/filename=([^;]+)/);
+    if (match) {
+      filename = match[1].replace(/"/g, '');
+    }
+  }
+
   const pdfBlob = await pdfResponse.blob();
   const formData = new FormData();
 
   formData.append('conversationId', conversationId);
   formData.append('content', 'Adjunto tu cotización 📄');
   formData.append('messageType', 'outgoing');
-  formData.append('attachments[]', pdfBlob, `cotizacion_${quoteId}.pdf`);
+  formData.append('attachments[]', pdfBlob, filename);
 
   const res = await fetch(
     `${API_URL}/chatwoot/send-message-with-file`,
