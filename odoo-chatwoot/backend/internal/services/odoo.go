@@ -3,19 +3,22 @@ package services
 import (
 	"fmt"
 	"odoo-backend/internal/config"
+	"odoo-backend/internal/services/odoo"
 	"odoo-backend/internal/utils"
 	"strings"
 )
 
 type OdooService struct {
-	config     *config.Config
-	uidCache   *int
+	config        *config.Config
+	uidCache      *int
+	ReportService *odoo.ReportService
 }
 
 func NewOdooService(cfg *config.Config) *OdooService {
 	return &OdooService{
-		config:   cfg,
-		uidCache: nil,
+		config:        cfg,
+		uidCache:      nil,
+		ReportService: odoo.NewReportService(cfg),
 	}
 }
 

@@ -1,6 +1,7 @@
 package handlers
 
 import (
+	"fmt"
 	"odoo-backend/internal/services"
 	"strconv"
 
@@ -360,6 +361,46 @@ func (h *OdooHandler) GetLeads(c *fiber.Ctx) error {
 	}
 	
 	return c.JSON(fiber.Map{"success": true, "count": len(leads), "leads": leads})
+}
+
+// GetQuotePDF retrieves PDF for a quote from Odoo
+func (h *OdooHandler) GetQuotePDF(c *fiber.Ctx) error {
+	id, err := strconv.Atoi(c.Params("id"))
+	if err != nil {
+		return c.Status(400).JSON(fiber.Map{"error": "invalid id"})
+	}
+	
+	// Get quote reference for filename
+	reference, err := h.odooService.ReportService.GetQuoteReference(id)
+	if err != nil {
+		reference = fmt.Sprintf("%d", id)
+	}
+	
+	pdfData, err := h.odooService.ReportService.GetQuotePDF(id)
+	if err != nil {
+		return c.Status(500).JSON(fiber.Map{"error": err.Error()})
+	}
+	
+	c.Set("Content-Type", "application/pdf")
+	c.Set("Content-Disposition", fmt.Sprintf("attachment; filename=Cotizacion_%s.pdf", reference))
+	return c.Send(pdfData)
+}
+
+// GetInvoicePDF retrieves PDF for an invoice from Odoo
+func (h *OdooHandler) GetInvoicePDF(c *fiber.Ctx) error {
+	id, err := strconv.Atoi(c.Params("id"))
+	if err != nil {
+		return c.Status(400).JSON(fiber.Map{"error": "invalid id"})
+	}
+	
+	pdfData, err := h.odooService.ReportService.GetInvoicePDF(id)
+	if err != nil {
+		return c.Status(500).JSON(fiber.Map{"error": err.Error()})
+	}
+	
+	c.Set("Content-Type", "application/pdf")
+	c.Set("Content-Disposition", fmt.Sprintf("attachment; filename=factura_%d.pdf", id))
+	return c.Send(pdfData)
 }
 
 // Health checks if the service is healthy

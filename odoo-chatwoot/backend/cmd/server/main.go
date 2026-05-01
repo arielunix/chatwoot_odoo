@@ -53,6 +53,7 @@ func main() {
 	app.Get("/odoo/products", odooHandler.GetProducts)
 	app.Post("/odoo/quote", odooHandler.CreateQuote)
 	app.Get("/odoo/quotes/:partner_id", odooHandler.GetQuotesByPartner)
+	app.Get("/odoo/quote/:id/pdf", odooHandler.GetQuotePDF)
 	app.Get("/odoo/quote/:id", odooHandler.GetQuoteDetail)
 	app.Put("/odoo/quote/:id", odooHandler.UpdateQuote)
 	app.Post("/odoo/quote/:id/invoice", odooHandler.CreateInvoiceFromQuote)
@@ -63,6 +64,7 @@ func main() {
 	app.Post("/odoo/invoice/:id/pay", odooHandler.PayInvoice)
 	app.Post("/odoo/lead", odooHandler.CreateLead)
 	app.Get("/odoo/leads", odooHandler.GetLeads)
+	app.Get("/odoo/invoice/:id/pdf", odooHandler.GetInvoicePDF)
 
 	// Chatwoot routes
 	app.Post("/chatwoot/send-message", chatwootHandler.SendMessage)

@@ -295,16 +295,23 @@ autoTable(doc, {
 };
 
 // ================= CHATWOOT =================
-export const sendPDFToChatwoot = async (pdfDoc, conversationId) => {
-  const blob = pdfDoc.output('blob');
+export const sendPDFToChatwoot = async (quoteId, conversationId) => {
+  const API_URL = import.meta.env.VITE_API_URL || '/api';
+
+  // Fetch PDF from Odoo backend
+  const pdfResponse = await fetch(`${API_URL}/odoo/quote/${quoteId}/pdf`);
+  
+  if (!pdfResponse.ok) {
+    throw new Error('Error al obtener PDF de Odoo');
+  }
+
+  const pdfBlob = await pdfResponse.blob();
   const formData = new FormData();
 
   formData.append('conversationId', conversationId);
   formData.append('content', 'Adjunto tu cotización 📄');
   formData.append('messageType', 'outgoing');
-  formData.append('attachments[]', blob, `cotizacion_${Date.now()}.pdf`);
-
-  const API_URL = import.meta.env.VITE_API_URL || '/api';
+  formData.append('attachments[]', pdfBlob, `cotizacion_${quoteId}.pdf`);
 
   const res = await fetch(
     `${API_URL}/chatwoot/send-message-with-file`,
@@ -320,8 +327,7 @@ export const sendPDFToChatwoot = async (pdfDoc, conversationId) => {
 // ================= FUNCIÓN PRINCIPAL =================
 export const generateAndSendQuotePDF = async (quote, conversationId) => {
   try {
-    const pdfDoc = await generateQuotePDF(quote);
-    const result = await sendPDFToChatwoot(pdfDoc, conversationId);
+    const result = await sendPDFToChatwoot(quote.id, conversationId);
     return result ? { success: true } : { success: false, error: 'Error al enviar PDF' };
   } catch (err) {
     return { success: false, error: err.message };

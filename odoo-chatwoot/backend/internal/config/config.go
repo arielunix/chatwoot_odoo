@@ -9,6 +9,7 @@ type Config struct {
 	OdooDB           string
 	OdooUser         string
 	OdooPass         string
+	OdooPassSimple   string
 	ChatwootURL      string
 	ChatwootToken    string
 	ChatwootAccountID string
@@ -21,6 +22,7 @@ func Load() *Config {
 		OdooDB:           getEnv("ODOO_DB", ""),
 		OdooUser:         getEnv("ODOO_USER", ""),
 		OdooPass:         getEnv("ODOO_PASS", ""),
+		OdooPassSimple:   getEnv("ODOO_PASS_SIMPLE", ""),
 		ChatwootURL:      getEnv("CHATWOOT_URL", "https://crm.tulogica.com"),
 		ChatwootToken:    getEnv("CHATWOOT_API_TOKEN", ""),
 		ChatwootAccountID: getEnv("CHATWOOT_ACCOUNT_ID", "2"),
