@@ -191,16 +191,25 @@ export default function ContactModule({ data, odooCustomer, onCreateCustomer, is
 
     try {
       const result = await createCustomer({
-        name: data?.data?.conversation?.meta?.sender?.name || 
+        name: data?.messages?.[0]?.sender?.name || 
+              data?.data?.conversation?.meta?.sender?.name || 
               data?.name || data?.contact?.name || "",
-        phone: data?.data?.conversation?.meta?.sender?.phone_number || 
+        phone: data?.messages?.[0]?.sender?.phone_number || 
+               data?.data?.conversation?.meta?.sender?.phone_number || 
                data?.phone || data?.contact?.phone || "",
-        email: data?.data?.conversation?.meta?.sender?.email || 
+        email: data?.messages?.[0]?.sender?.email || 
+               data?.data?.conversation?.meta?.sender?.email || 
                data?.email || data?.contact?.email || "",
+        image_url: data?.messages?.[0]?.sender?.thumbnail || 
+                   data?.messages?.[0]?.sender?.avatar_url ||
+                   data?.contact?.thumbnail || 
+                   data?.data?.conversation?.meta?.sender?.thumbnail || "",
       });
-      if (result.success) {
+      if (result && result.success) {
         setChatwootSnackbar({ open: true, message: '✅ Cliente encontrado en Odoo', severity: 'success' });
         onCreateCustomer(result.customer);
+      } else {
+        throw new Error(result?.error || 'Error desconocido al crear cliente');
       }
     } catch (err) {
       console.error("Error creando cliente:", err);

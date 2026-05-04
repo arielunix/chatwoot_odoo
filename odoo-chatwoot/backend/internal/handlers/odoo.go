@@ -48,9 +48,10 @@ func (h *OdooHandler) SearchCustomer(c *fiber.Ctx) error {
 // CreateCustomer creates a new customer
 func (h *OdooHandler) CreateCustomer(c *fiber.Ctx) error {
 	type Request struct {
-		Name  string `json:"name"`
-		Phone string `json:"phone"`
-		Email string `json:"email"`
+		Name     string `json:"name"`
+		Phone    string `json:"phone"`
+		Email    string `json:"email"`
+		ImageURL string `json:"image_url"`
 	}
 	
 	var req Request
@@ -62,7 +63,7 @@ func (h *OdooHandler) CreateCustomer(c *fiber.Ctx) error {
 		return c.Status(400).JSON(fiber.Map{"error": "name requerido"})
 	}
 	
-	id, err := h.odooService.CreateCustomer(req.Name, req.Phone, req.Email)
+	id, err := h.odooService.CreateCustomer(req.Name, req.Phone, req.Email, req.ImageURL)
 	if err != nil {
 		return c.Status(500).JSON(fiber.Map{"error": err.Error()})
 	}
@@ -107,22 +108,27 @@ func (h *OdooHandler) SearchCustomerForPanel(c *fiber.Ctx) error {
 // CreateCustomerForPanel creates a customer (for panel)
 func (h *OdooHandler) CreateCustomerForPanel(c *fiber.Ctx) error {
 	type Request struct {
-		Name  string `json:"name"`
-		Phone string `json:"phone"`
-		Email string `json:"email"`
+		Name     string `json:"name"`
+		Phone    string `json:"phone"`
+		Email    string `json:"email"`
+		ImageURL string `json:"image_url"`
 	}
 	
 	var req Request
 	if err := c.BodyParser(&req); err != nil {
+		fmt.Printf("Error parsing request: %v\n", err)
 		return c.Status(400).JSON(fiber.Map{"error": "invalid request"})
 	}
+	
+	fmt.Printf("CreateCustomer request: Name=%s, Phone=%s, Email=%s, ImageURL=%s\n", req.Name, req.Phone, req.Email, req.ImageURL)
 	
 	if req.Name == "" {
 		return c.Status(400).JSON(fiber.Map{"error": "name requerido"})
 	}
 	
-	id, err := h.odooService.CreateCustomer(req.Name, req.Phone, req.Email)
+	id, err := h.odooService.CreateCustomer(req.Name, req.Phone, req.Email, req.ImageURL)
 	if err != nil {
+		fmt.Printf("Error creating customer: %v\n", err)
 		return c.Status(500).JSON(fiber.Map{"error": err.Error()})
 	}
 	

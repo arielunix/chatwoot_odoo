@@ -1,7 +1,10 @@
 package services
 
 import (
+	"encoding/base64"
 	"fmt"
+	"io"
+	"net/http"
 	"odoo-backend/internal/config"
 	"odoo-backend/internal/services/odoo"
 	"odoo-backend/internal/utils"
@@ -9,6 +12,28 @@ import (
 	"strconv"
 	"strings"
 )
+
+// downloadAndEncodeImage downloads an image from URL and returns base64 encoded string
+func downloadAndEncodeImage(url string) (string, error) {
+	resp, err := http.Get(url)
+	if err != nil {
+		return "", err
+	}
+	defer resp.Body.Close()
+
+	if resp.StatusCode != http.StatusOK {
+		return "", fmt.Errorf("failed to download image: status %d", resp.StatusCode)
+	}
+
+	imageData, err := io.ReadAll(resp.Body)
+	if err != nil {
+		return "", err
+	}
+
+	// Convert to base64 without data URI prefix (Odoo expects raw base64)
+	base64Str := base64.StdEncoding.EncodeToString(imageData)
+	return base64Str, nil
+}
 
 type OdooService struct {
 	config        *config.Config
@@ -127,10 +152,24 @@ func (s *OdooService) SearchCustomer(phone string) ([]utils.Partner, error) {
 }
 
 // CreateCustomer creates a new customer
-func (s *OdooService) CreateCustomer(name, phone, email string) (int, error) {
+func (s *OdooService) CreateCustomer(name, phone, email, imageURL string) (int, error) {
 	uid, err := s.GetUID()
 	if err != nil {
 		return 0, err
+	}
+	
+	var imageXML string
+	if imageURL != "" {
+		// Download image and convert to base64 (optional - if it fails, continue without image)
+		imageBase64, err := downloadAndEncodeImage(imageURL)
+		if err == nil && imageBase64 != "" {
+			imageXML = fmt.Sprintf(`
+                <member>
+                  <name>image_1920</name>
+                  <value><string>%s</string></value>
+                </member>`, imageBase64)
+		}
+		// If image download fails, we continue without the image (graceful degradation)
 	}
 	
 	xml := fmt.Sprintf(`<?xml version="1.0"?>
@@ -159,7 +198,7 @@ func (s *OdooService) CreateCustomer(name, phone, email string) (int, error) {
                 <member>
                   <name>email</name>
                   <value><string>%s</string></value>
-                </member>
+                </member>%s
               </struct>
             </value>
           </data>
@@ -167,7 +206,7 @@ func (s *OdooService) CreateCustomer(name, phone, email string) (int, error) {
       </value>
     </param>
   </params>
-</methodCall>`, s.config.OdooDB, uid, s.config.OdooPass, name, phone, email)
+</methodCall>`, s.config.OdooDB, uid, s.config.OdooPass, name, phone, email, imageXML)
 	
 	text, err := utils.XMLRPCCall(s.config.OdooURL, "/xmlrpc/2/object", xml)
 	if err != nil {

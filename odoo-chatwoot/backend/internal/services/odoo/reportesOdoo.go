@@ -78,15 +78,22 @@ func (s *ReportService) authenticateSession() (string, error) {
 
 // GetQuotePDF generates and retrieves a PDF for a sale order (quote) using session authentication
 func (s *ReportService) GetQuotePDF(quoteID int) ([]byte, error) {
+	fmt.Printf("GetQuotePDF: Starting for quote ID %d\n", quoteID)
+	
 	sessionID, err := s.authenticateSession()
 	if err != nil {
+		fmt.Printf("GetQuotePDF: Authentication failed: %v\n", err)
 		return nil, fmt.Errorf("failed to authenticate: %v", err)
 	}
 	
+	fmt.Printf("GetQuotePDF: Session ID obtained: %s\n", sessionID)
+	
 	reportURL := fmt.Sprintf("%s/report/pdf/sale.report_saleorder/%d", s.config.OdooURL, quoteID)
+	fmt.Printf("GetQuotePDF: Report URL: %s\n", reportURL)
 	
 	req, err := http.NewRequest("GET", reportURL, nil)
 	if err != nil {
+		fmt.Printf("GetQuotePDF: Failed to create request: %v\n", err)
 		return nil, err
 	}
 	
@@ -96,25 +103,34 @@ func (s *ReportService) GetQuotePDF(quoteID int) ([]byte, error) {
 	client := &http.Client{}
 	resp, err := client.Do(req)
 	if err != nil {
+		fmt.Printf("GetQuotePDF: Request failed: %v\n", err)
 		return nil, err
 	}
 	defer resp.Body.Close()
 	
+	fmt.Printf("GetQuotePDF: Response status: %d\n", resp.StatusCode)
+	
 	if resp.StatusCode != http.StatusOK {
 		body, _ := io.ReadAll(resp.Body)
+		fmt.Printf("GetQuotePDF: Odoo returned error: %d - %s\n", resp.StatusCode, string(body))
 		return nil, fmt.Errorf("Odoo Report Error: %d - %s", resp.StatusCode, string(body))
 	}
 	
 	pdfData, err := io.ReadAll(resp.Body)
 	if err != nil {
+		fmt.Printf("GetQuotePDF: Failed to read response body: %v\n", err)
 		return nil, err
 	}
 	
+	fmt.Printf("GetQuotePDF: PDF data size: %d bytes\n", len(pdfData))
+	
 	// Check if we got HTML (login page) instead of PDF
 	if strings.HasPrefix(string(pdfData), "<!DOCTYPE") || strings.HasPrefix(string(pdfData), "<html") {
+		fmt.Printf("GetQuotePDF: Got HTML instead of PDF (authentication failed)\n")
 		return nil, fmt.Errorf("Authentication failed - got HTML instead of PDF")
 	}
 	
+	fmt.Printf("GetQuotePDF: PDF retrieved successfully\n")
 	return pdfData, nil
 }
 
