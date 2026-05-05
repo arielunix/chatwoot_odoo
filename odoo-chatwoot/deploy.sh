@@ -37,7 +37,7 @@ if [ ! -f "./frontend/.env" ]; then
     echo "⚠️  Archivo frontend/.env no encontrado. Creando archivo de ejemplo..."
     cat > ./frontend/.env << EOF
 # Frontend Environment Variables
-VITE_API_URL=http://localhost:3001
+VITE_API_URL=https://odooapi.tulogica.com
 EOF
     echo "⚠️  Por favor configura frontend/.env con la URL de tu API"
 fi
@@ -53,7 +53,7 @@ case "${1:-deploy}" in
         
         echo "✅ Despliegue completado!"
         echo "🌐 Frontend: http://localhost"
-        echo "🔌 Backend: http://localhost:3001"
+        echo "🔌 Backend: https://odooapi.tulogica.com"
         ;;
     
     stop)

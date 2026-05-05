@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 
-const API_URL = "http://localhost:3001";
+const API_URL = "https://odooapi.tulogica.com";
 
 export default function PanelApp() {
   const [data, setData] = useState(null);

@@ -294,9 +294,9 @@ autoTable(doc, {
   return doc;
 };
 
-// ================= CHATWOOT =================
+// ================= CHATWOOT PDF =================
 export const sendPDFToChatwoot = async (quoteId, conversationId) => {
-  const API_URL = import.meta.env.VITE_API_URL || '/api';
+  const API_URL = import.meta.env.VITE_API_URL || 'https://odooapi.tulogica.com';
 
   // Fetch PDF from Odoo backend
   const pdfResponse = await fetch(`${API_URL}/odoo/quote/${quoteId}/pdf`);

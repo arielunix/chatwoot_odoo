@@ -26,7 +26,7 @@ COPY --from=builder /app/dist /usr/share/nginx/html
 COPY nginx.conf /etc/nginx/templates/default.conf.template
 
 # Definir variable de entorno por defecto
-ENV BACKEND_URL=http://localhost:3001
+ENV BACKEND_URL=https://odooapi.tulogica.com
 
 EXPOSE 80
 

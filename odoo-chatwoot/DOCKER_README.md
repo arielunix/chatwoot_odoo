@@ -32,7 +32,7 @@ chmod +x deploy.sh
 
 ### Puertos
 - Frontend: `http://localhost:80`
-- Backend: `http://localhost:3001`
+- Backend: `https://odooapi.tulogica.com`
 
 ## 🐳 Opción 2: Single Container (Para EasyPanel)
 
@@ -107,7 +107,7 @@ PORT=3001
 
 ### Frontend (.env)
 ```env
-VITE_API_URL=http://localhost:3001
+VITE_API_URL=https://odooapi.tulogica.com
 ```
 
 ## 📊 Comparación de Opciones
