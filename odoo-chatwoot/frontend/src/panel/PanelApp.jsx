@@ -181,7 +181,7 @@ export default function PanelApp() {
           anchorOrigin={{ vertical: 'top', horizontal: 'center' }}
         >
           <Alert onClose={handleCloseEnterpriseMessage} severity="info" sx={{ width: '100%' }}>
-            Este módulo está disponible solo en la versión Enterprise. Contáctenos para más información.
+            Este módulo está disponible solo en la versión Enterprise. Contáctenos para más información (<a href="https://tulogica.com" target="_blank" rel="noopener noreferrer">vistanos</a>).
           </Alert>
         </Snackbar>
       </Paper>
