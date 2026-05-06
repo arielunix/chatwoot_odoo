@@ -42,7 +42,7 @@ Adaptador de odoo mas chatwoot
 
 1. Cliente envía mensaje en Chatwoot  
 2. Middleware detecta o crea contacto en Odoo  
-3. Se genera oportunidad o cotización automáticamente  
+3. Se genera oportunidad o cotización automáticamente  (por desarrollar)
 4. Se convierte en factura desde Odoo  
 5. Estado se sincroniza en Chatwoot y dashboard  
 
