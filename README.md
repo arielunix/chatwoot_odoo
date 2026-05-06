@@ -1,4 +1,4 @@
-# chatwoot_odoo
+# chatwoot Odoo
 Adaptador de odoo mas chatwoot
 
 🚀 Odoo + Chatwoot Adapter (Fiber + React)
