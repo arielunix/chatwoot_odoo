@@ -58,3 +58,6 @@ temp/
 
 # Optional
 coverage/
+
+# Shell scripts (excluir archivos .sh)
+*.sh
