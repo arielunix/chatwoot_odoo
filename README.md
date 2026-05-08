@@ -1,7 +1,7 @@
 # chatwoot Odoo
 Adaptador de odoo mas chatwoot
 
-
+<img width="1440" height="770" alt="CHATWOOT-ODOO-1-Miniatura" src="https://github.com/user-attachments/assets/be3749a1-46b6-4891-8ae3-34827b61a047" />
 
 ---
 
@@ -64,6 +64,8 @@ Centralizar la operación comercial y de soporte en un solo sistema, eliminando 
 
 ---
 
+
+
 ## 📦 Estado del proyecto
 
 - ✔️ Integración base Chatwoot  
@@ -80,6 +82,7 @@ Centralizar la operación comercial y de soporte en un solo sistema, eliminando 
 - Módulo de leads y oportunidades  
 - Gestión de proyectos y tareas  
 - IA para generación automática de:
+  https://www.youtube.com/watch?v=RBTXwxnvu84
   - oportunidades  
   - cotizaciones  
   - respuestas desde chat  
