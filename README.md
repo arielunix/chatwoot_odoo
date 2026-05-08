@@ -1,57 +1,79 @@
-# chatwoot Odoo
-Adaptador de odoo mas chatwoot
+# 🚀 Chatwoot + Odoo Adapter
+
+Integración moderna entre **Chatwoot** y **Odoo** para centralizar atención al cliente, ventas y facturación en tiempo real.
 
 <img width="1440" height="770" alt="CHATWOOT-ODOO-1-Miniatura" src="https://github.com/user-attachments/assets/be3749a1-46b6-4891-8ae3-34827b61a047" />
 
 ---
+
+## 🎥 Demo del proyecto
+
+▶️ Video completo del funcionamiento:
+
 https://www.youtube.com/watch?v=RBTXwxnvu84
+
+---
 
 ## 📌 Stack tecnológico
 
-- Backend: Go + Fiber  
-- Frontend: React  
-- ERP: Odoo  
-- API: REST + Webhooks  
-- Arquitectura: Middleware / Microservicio  
+- **Backend:** Go + Fiber  
+- **Frontend:** React  
+- **ERP:** Odoo  
+- **CRM / Atención:** Chatwoot  
+- **Comunicación:** REST API + Webhooks  
+- **Arquitectura:** Middleware / Microservicio  
 
 ---
 
-## ⚙️ Características principales
+## ⚙️ Funcionalidades principales
 
 ### 👤 Gestión de contactos
+
 - Sincronización automática entre Odoo y Chatwoot  
-- Creación de contactos desde conversaciones entrantes  
-- Actualización bidireccional de datos  
+- Creación automática de contactos desde conversaciones entrantes  
+- Actualización bidireccional de información  
+- Asociación automática de clientes y conversaciones  
 
 ---
 
-### 💼 Módulo de ventas
+### 💼 Módulo comercial
+
 - Generación de cotizaciones desde Chatwoot  
-- Asociación de conversaciones con oportunidades de venta  
+- Relación entre conversaciones y oportunidades de venta  
 - Seguimiento del estado comercial en tiempo real  
+- Flujo automatizado de atención → venta  
 
 ---
 
 ### 🧾 Facturación
-- Creación de facturas en Odoo desde cotizaciones  
-- Consulta de estado de pagos (pendiente, parcial, pagado)  
-- Trazabilidad completa: cliente → venta → factura  
+
+- Creación de facturas desde cotizaciones en Odoo  
+- Consulta del estado de pago:
+  - Pendiente
+  - Parcial
+  - Pagado
+
+- Trazabilidad completa:
+
+```text
+Cliente → Conversación → Cotización → Factura
+```
 
 ---
 
 ## 🔄 Flujo de integración
 
-1. Cliente envía mensaje en Chatwoot  
-2. Middleware detecta o crea contacto en Odoo  
-3. Se genera oportunidad o cotización automáticamente  (por desarrollar)
-4. Se convierte en factura desde Odoo  
-5. Estado se sincroniza en Chatwoot y dashboard  
+1. El cliente envía un mensaje en Chatwoot  
+2. El middleware detecta o crea el contacto en Odoo  
+3. Se genera una oportunidad o cotización automáticamente *(en desarrollo)*  
+4. La cotización puede convertirse en factura  
+5. El estado se sincroniza en Chatwoot y el dashboard  
 
 ---
 
 ## 🎯 Objetivo del proyecto
 
-Centralizar la operación comercial y de soporte en un solo sistema, eliminando procesos manuales y conectando ventas, atención al cliente y facturación en tiempo real.
+Centralizar operaciones comerciales y de soporte en una sola plataforma, eliminando procesos manuales y conectando atención al cliente, ventas y facturación en tiempo real.
 
 ---
 
@@ -61,30 +83,61 @@ Centralizar la operación comercial y de soporte en un solo sistema, eliminando 
 - Reducción de trabajo manual  
 - Visibilidad completa del ciclo del cliente  
 - Escalable como SaaS multiempresa  
-- Integración flexible vía APIs  
+- Integración flexible mediante APIs y Webhooks  
+- Arquitectura desacoplada y fácil de extender  
 
 ---
 
+## 📦 Estado actual del proyecto
 
-
-## 📦 Estado del proyecto
-
-- ✔️ Integración base Chatwoot  
-- ✔️ Conexión con Odoo  
-- ⚙️ Módulo de ventas en progreso  
-- ⚙️ Facturación en desarrollo  
-- 🚧 Dashboard React en construcción  
+| Módulo | Estado |
+|---|---|
+| Integración base con Chatwoot | ✔️ |
+| Conexión con Odoo | ✔️ |
+| Gestión de contactos | ✔️ |
+| Cotizaciones automáticas | ⚙️ En progreso |
+| Facturación | ⚙️ En desarrollo |
+| Dashboard React | 🚧 En construcción |
 
 ---
 
-## 📌 Próximas mejoras
+## 🧠 Próximas mejoras
 
+### 🔄 Integraciones
 - Webhooks bidireccionales avanzados  
-- Módulo de leads y oportunidades  
-- Gestión de proyectos y tareas  
-- IA para generación automática de:
-  https://www.youtube.com/watch?v=RBTXwxnvu84
-  - oportunidades  
-  - cotizaciones  
-  - respuestas desde chat  
-- Automatización completa desde conversaciones  
+- Gestión de leads y oportunidades  
+- Integración con proyectos y tareas  
+
+### 🤖 Inteligencia Artificial
+- Generación automática de:
+  - oportunidades
+  - cotizaciones
+  - respuestas desde el chat
+  - resúmenes de conversaciones
+
+### ⚡ Automatización
+- Flujo comercial completamente automatizado desde conversaciones  
+- Reglas automáticas según etiquetas o mensajes  
+- Asignación inteligente de clientes y ventas  
+
+---
+
+## 👥 Comunidad
+
+### Grupo de WhatsApp para desarrollo y soporte
+
+https://chat.whatsapp.com/L0PlKIfGjAC7Ba0IClLe60
+
+---
+
+## 📌 Enfoque del proyecto
+
+Este adaptador busca convertir Chatwoot en una interfaz comercial conectada directamente con Odoo, permitiendo administrar clientes, ventas y facturación desde conversaciones en tiempo real.
+
+---
+
+## ⭐ Tecnologías utilizadas
+
+```text
+Go • Fiber • React • Odoo • Chatwoot • Docker • REST API • Webhooks
+```
