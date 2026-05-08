@@ -4,6 +4,7 @@ Adaptador de odoo mas chatwoot
 <img width="1440" height="770" alt="CHATWOOT-ODOO-1-Miniatura" src="https://github.com/user-attachments/assets/be3749a1-46b6-4891-8ae3-34827b61a047" />
 
 ---
+https://www.youtube.com/watch?v=RBTXwxnvu84
 
 ## 📌 Stack tecnológico
 
